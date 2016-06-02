@@ -1,21 +1,21 @@
 {
-    "name": "sg/datatablesbundle",
+    "name": "dropy/datatablesbundle",
     "type": "symfony-bundle",
     "description": "Symfony Datatable Bundle For Doctrine2 Entities",
-    "keywords": ["symfony2", "symfony3", "datatable", "datatables", "grid", "table", "datagrid", "pagination"],
-    "homepage": "https://github.com/stwe/DatatablesBundle",
+    "keywords": ["symfony2", "symfony3", "datatable", "datatables", "grid", "table", "datagrid", "pagination","dropy"],
+    "homepage": "https://github.com/dropy/DatatablesBundle",
     "license": "MIT",
     "authors": [
         {
-            "name": "stwe"
+            "name": "dropy"
         },
         {
-            "name": "SgDatatablesBundle contributors",
-            "homepage": "https://github.com/stwe/DatatablesBundle/graphs/contributors"
+            "name": "DropyDatatablesBundle contributors",
+            "homepage": "https://github.com/dropy/DatatablesBundle/graphs/contributors"
         }
     ],
     "support": {
-        "issues": "https://github.com/stwe/DatatablesBundle/issues"
+        "issues": "https://github.com/dropy/DatatablesBundle/issues"
     },
     "require": {
         "php": ">=5.3.3",
@@ -35,7 +35,7 @@
         "liip/imagine-bundle": "^1.3"
     },
     "autoload": {
-        "psr-0": { "Sg\\DatatablesBundle": "" }
+        "psr-0": { "Dropy\\DatatablesBundle": "" }
     },
-    "target-dir": "Sg/DatatablesBundle"
+    "target-dir": "Dropy/DatatablesBundle"
 }
