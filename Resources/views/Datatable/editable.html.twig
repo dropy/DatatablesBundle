@@ -2,8 +2,16 @@
     {% if column.editable is defined %}
         {% if true == column.editable %}
             {% set token = csrf_token('editable') %}
+
             var str = '{{ column.data }}'.split(".").join("_");
+            str = str.replace(/[\[\], ]+/g,'');
             str = 'span.sg-editable-' + str;
+            {% if column.editableRoute is not  empty  %}
+            var edit_url = "{{ path(column.editableRoute) }}";
+            {% else %}
+                var edit_url = "{{ path('sg_datatables_edit') }}"
+            {% endif %}
+            console.log(edit_url);
             $(str).editable({
                 {# datetime column #}
                 {% if 'datetime' == column.alias %}
@@ -16,7 +24,7 @@
                 emptytext: 'false',
                 {% endif %}
                 name: '{{ column.data }}',
-                url: "{{ path('sg_datatables_edit') }}",
+                url: edit_url,
                 title: '{{ column.title }} ' + "{{ 'datatables.actions.edit'|trans({}, 'messages') }}",
                 params: function (params) {
                     params.entity = '{{ datatable.entity|e('js') }}';
@@ -32,6 +40,7 @@
                 }
                 {% endif %}
             });
+
         {% endif %}
     {% endif %}
 {% endfor %}

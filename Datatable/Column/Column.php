@@ -35,6 +35,13 @@ class Column extends AbstractColumn
      */
     protected $editable;
 
+    /**
+     * Editable flag.
+     *
+     * @var string
+     */
+    protected $editable_route;
+
     //-------------------------------------------------
     // ColumnInterface
     //-------------------------------------------------
@@ -95,7 +102,8 @@ class Column extends AbstractColumn
             'filter_property' => '',
             'filter_search_column' => '',
             'default' => '',
-            'editable' => false
+            'editable' => false,
+            'editable_route' => ''
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -115,6 +123,7 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('filter_search_column', 'string');
         $resolver->setAllowedTypes('default', 'string');
         $resolver->setAllowedTypes('editable', 'bool');
+        $resolver->setAllowedTypes('editable_route', 'string');
 
         $resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
         $resolver->setAllowedValues('filter_type', array('text', 'select'));
@@ -173,4 +182,22 @@ class Column extends AbstractColumn
     {
         return $this->editable;
     }
+
+    /**
+     * @return string
+     */
+    public function getEditableRoute()
+    {
+        return $this->editable_route;
+    }
+
+    /**
+     * @param string $editable_route
+     */
+    public function setEditableRoute($editable_route)
+    {
+        $this->editable_route = $editable_route;
+    }
+
+
 }

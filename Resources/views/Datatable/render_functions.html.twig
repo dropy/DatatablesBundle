@@ -82,6 +82,7 @@
     function render_editable_text(data, type, row, meta, colData) {
         if (data != null) {
             var str = colData.split(".").join("_");
+            str = str.replace(/[\[\], ]+/g,'');
             var spanClass = "sg-editable-" + str;
             var result = '<span class="' + spanClass + '"';
             result += 'data-pk="' + row.id + '"data-type="text"' + '>' + data + '</span>';
