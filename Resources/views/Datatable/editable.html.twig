@@ -37,7 +37,10 @@
                 success: function(response, newValue) {
                     oTable.draw();
                     alert("{{ 'editable.tableRedraw'|trans({}, 'messages') }}");
-                }
+                },
+                error: function(response, newValue) {
+                    alert("Erreur : "+response.responseText);
+                },
                 {% endif %}
             });
 
