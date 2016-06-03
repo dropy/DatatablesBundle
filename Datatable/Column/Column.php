@@ -36,11 +36,26 @@ class Column extends AbstractColumn
     protected $editable;
 
     /**
-     * Editable flag.
+     * Editable optionnal route.
      *
      * @var string
      */
     protected $editable_route;
+
+
+    /**
+     * Editable optionnal type .
+     *
+     * @var string
+     */
+    protected $editable_type;
+
+    /**
+     * Editable optionnal title .
+     *
+     * @var string
+     */
+    protected $editable_title;
 
     //-------------------------------------------------
     // ColumnInterface
@@ -103,7 +118,9 @@ class Column extends AbstractColumn
             'filter_search_column' => '',
             'default' => '',
             'editable' => false,
-            'editable_route' => ''
+            'editable_route' => '',
+            'editable_type' => '',
+            'editable_title' => ''
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -124,9 +141,12 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('default', 'string');
         $resolver->setAllowedTypes('editable', 'bool');
         $resolver->setAllowedTypes('editable_route', 'string');
+        $resolver->setAllowedTypes('editable_type', 'string');
+        $resolver->setAllowedTypes('editable_title', 'string');
 
         $resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
         $resolver->setAllowedValues('filter_type', array('text', 'select'));
+        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime',''));
 
         return $this;
     }
@@ -198,6 +218,39 @@ class Column extends AbstractColumn
     {
         $this->editable_route = $editable_route;
     }
+
+    /**
+     * @return string
+     */
+    public function getEditableType()
+    {
+        return $this->editable_type;
+    }
+
+    /**
+     * @param string $editable_type
+     */
+    public function setEditableType($editable_type)
+    {
+        $this->editable_type = $editable_type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditableTitle()
+    {
+        return $this->editable_title;
+    }
+
+    /**
+     * @param string $editable_title
+     */
+    public function setEditableTitle($editable_title)
+    {
+        $this->editable_title = $editable_title;
+    }
+
 
 
 }

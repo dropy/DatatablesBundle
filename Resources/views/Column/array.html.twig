@@ -9,6 +9,12 @@
 {% extends 'SgDatatablesBundle:Column:column.html.twig' %}
 
 {% block data %}
+    {% if column.editable %}
+        {% set editable_render_function = 'render_editable_text' %}
+        {% if  column.editableType is not empty %}
+            {% set editable_render_function = 'render_editable_'~column.editableType %}
+        {% endif %}
+    {% endif %}
     "data": "{{ column.data }}",
     {% if column.default and column.render is null %}
         "render": function(data) {
@@ -37,7 +43,7 @@
     {% endif %}
     {% if column.editable %}
         "render": function(data, type, row, meta) {
-        return render_editable_text(data, type, row, meta, '{{ column.data }}');
+        return {{ editable_render_function }}(data, type, row, meta, '{{ column.data }}', '{{ column.editableTitle }}' );
         },
     {% endif %}
 {% endblock %}
