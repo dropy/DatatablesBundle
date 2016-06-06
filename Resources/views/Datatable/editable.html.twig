@@ -22,6 +22,8 @@
                 {% if 'boolean' == column.alias %}
                 source: [{'true': "{{ column.trueLabel ? column.trueLabel : 'true' }}"}, {'false': "{{ column.falseLabel ? column.falseLabel : 'false' }}"}],
                 emptytext: 'false',
+                {% else %}
+                emptytext: 'Aucune valeur',
                 {% endif %}
                 name: '{{ column.data }}',
                 url: edit_url,
