@@ -2,8 +2,16 @@
     {% if column.editable is defined %}
         {% if true == column.editable %}
             {% set token = csrf_token('editable') %}
+
             var str = '{{ column.data }}'.split(".").join("_");
+            str = str.replace(/[\[\], ]+/g,'');
             str = 'span.sg-editable-' + str;
+            {% if column.editableRoute is not  empty  %}
+            var edit_url = "{{ path(column.editableRoute) }}";
+            {% else %}
+                var edit_url = "{{ path('sg_datatables_edit') }}"
+            {% endif %}
+
             $(str).editable({
                 {# datetime column #}
                 {% if 'datetime' == column.alias %}
@@ -14,9 +22,12 @@
                 {% if 'boolean' == column.alias %}
                 source: [{'true': "{{ column.trueLabel ? column.trueLabel : 'true' }}"}, {'false': "{{ column.falseLabel ? column.falseLabel : 'false' }}"}],
                 emptytext: 'false',
+                {% else %}
+                emptytext: 'Aucune valeur',
                 {% endif %}
+                step: 'any',
                 name: '{{ column.data }}',
-                url: "{{ path('sg_datatables_edit') }}",
+                url: edit_url,
                 title: '{{ column.title }} ' + "{{ 'datatables.actions.edit'|trans({}, 'messages') }}",
                 params: function (params) {
                     params.entity = '{{ datatable.entity|e('js') }}';
@@ -29,9 +40,13 @@
                 success: function(response, newValue) {
                     oTable.draw();
                     alert("{{ 'editable.tableRedraw'|trans({}, 'messages') }}");
-                }
+                },
+                error: function(response, newValue) {
+                    alert("Erreur : "+response.responseText);
+                },
                 {% endif %}
             });
+
         {% endif %}
     {% endif %}
 {% endfor %}
