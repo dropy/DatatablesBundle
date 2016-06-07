@@ -9,7 +9,10 @@
 {% set visible = false %}
 
 {% set multiple_actions %}
-    <div>
+
+<div class="multiselect-action-fixed" >
+    <div class="multiselect-action-input-fixed">
+
         {% for action in column.actions %}
             {% set visible = (action.role and app.user is not null and is_granted(action.role) or not action.role) ? true : false %}
 
@@ -22,6 +25,7 @@
             {% endif %}
         {% endfor %}
     </div>
+</div>
 {% endset %}
 
 $("#{{ view_table_id }}_multiselect_actions").append("{{ multiple_actions|e('js') }}");
@@ -43,6 +47,14 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
             return;
         }
 
+        if (
+            $(this).attr("href") == "{{ path('partnerui_add_link_products_seller_ajax') }}"
+        ) {
+
+            addPoductSellerDatatable(oTable,"{{ path('partnerui_get_selected_products_results_ajax') }}","{{ path('partnerui_add_link_products_seller_ajax') }}","{{ view_table_id }}");
+            return;
+        }
+
         {% set token = csrf_token('multiselect') %}
 
         $.ajax({
@@ -55,6 +67,9 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
             },
             success: function(msg) {
                 oTable.draw();
+                if(msg && msg.message){
+                    alert(msg.message);
+                }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
