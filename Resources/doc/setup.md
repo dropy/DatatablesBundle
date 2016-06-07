@@ -3,9 +3,11 @@
 1. [Example](#1-example)
 2. [Top actions](#2-top-actions)
 3. [Callbacks](#3-callbacks)
-4. [Features](#4-features)
-5. [Options](#5-options)
-6. [Ajax](#6-ajax)
+4. [Events](#4-events)
+5. [Features](#5-features)
+6. [Options](#6-options)
+7. [Ajax](#7-ajax)
+8. [Name](#8-name)
 
 ## 1. Example
 
@@ -32,9 +34,18 @@
         ));
     
         $this->callbacks->set(array(
-            'draw_callback' => "function( settings ) {
-                                    alert( 'DataTables has redrawn the table.' );
-                                }"
+            'row_callback' => array(
+                'template' => ':post:row_callback.js.twig',
+                'vars' => array('id' => '2')
+            ),
+            'init_complete' => array(
+                'template' => ':post:init.js.twig'
+            )
+        ));
+        
+        $this->events->set(array(
+            'processing' => ':events:processing.js.twig',
+            'order' => ':events:order.js.twig'
         ));
 
         $this->features->set(array(
@@ -83,24 +94,122 @@
 
 ## 3. Callbacks
 
-| Callback            | Type   | Default |
-|---------------------|--------|---------|
-| created_row         | string | ''      |
-| draw_callback       | string | ''      |
-| footer_callback     | string | ''      |
-| format_number       | string | ''      |
-| header_callback     | string | ''      |
-| info_callback       | string | ''      |
-| init_complete       | string | ''      |
-| pre_draw_callback   | string | ''      |
-| row_callback        | string | ''      |
-| state_load_callback | string | ''      |
-| state_loaded        | string | ''      |
-| state_load_params   | string | ''      |
-| state_save_callback | string | ''      |
-| state_save_params   | string | ''      |
+| Callback            | Type  | Default |
+|---------------------|-------|---------|
+| created_row         | array | array() |
+| draw_callback       | array | array() |
+| footer_callback     | array | array() |
+| format_number       | array | array() |
+| header_callback     | array | array() |
+| info_callback       | array | array() |
+| init_complete       | array | array() |
+| pre_draw_callback   | array | array() |
+| row_callback        | array | array() |
+| state_load_callback | array | array() |
+| state_loaded        | array | array() |
+| state_load_params   | array | array() |
+| state_save_callback | array | array() |
+| state_save_params   | array | array() |
 
-## 4. Features
+**Example**
+
+```php
+// Datatable class
+
+$this->callbacks->set(array(
+    'row_callback' => array(
+        'template' => ':post:row_callback.js.twig',
+        'vars' => array('id' => '2')
+    ),
+    'init_complete' => array(
+        'template' => ':post:init.js.twig'
+    )
+));
+```
+
+```js
+// row_callback.js.twig
+
+function rowCallback(nRow, aData, index) {
+    var id = "{{ id }}";
+    var $nRow = $(nRow);
+
+    if (aData.id == id) {
+        $nRow.css({"background-color": "red"});
+    }
+
+    return nRow;
+}
+```
+
+```js
+// init.js.twig
+
+function init(settings, json) {
+    alert('Init complete.');
+}
+```
+
+## 4. Events
+
+| Event             | Type  | Default |
+|-------------------|-------|---------|
+| column_sizing     | array | array() |
+| column_visibility | array | array() |
+| destroy           | array | array() |
+| draw              | array | array() |
+| error             | array | array() |
+| init              | array | array() |
+| length            | array | array() |
+| order             | array | array() |
+| page              | array | array() |
+| pre_init          | array | array() |
+| pre_xhr           | array | array() |
+| processing        | array | array() |
+| search            | array | array() |
+| state_loaded      | array | array() |
+| state_load_params | array | array() |
+| state_save_params | array | array() |
+| xhr               | array | array() |
+
+**Example**
+
+```php
+// Datatable class
+
+$this->events->set(array(
+    'processing' => array(
+        'template' => ':events:processing.js.twig',
+        'vars' => array('testStr' => 'processing test')
+    ),
+    'order' => array(
+        'template' => ':events:order.js.twig',
+        'vars' => array('testStr' => 'order test')
+    )
+));
+```
+
+```js
+// processing.js.twig
+
+function processing(e, settings, processing) {
+    var t = '{{ testStr }}';
+    console.info(t);
+    console.info(processing);
+}
+
+
+// order.js.twig
+
+function order() {
+    var order = oTable.order();
+    var t = '{{ testStr }}';
+    console.info(t);
+    console.info('Ordering on column '+order[0][0]+' ('+order[0][1]+')');
+}
+```
+
+## 5. Features
 
 | Feature       | Type   | Default |
 |---------------|--------|---------|
@@ -120,7 +229,7 @@
 | delay         | int    | 0       |
 | extensions    | array  | array() |
 
-## 5. Options
+## 6. Options
 
 | Option                        | Type   | Default                        |
 |-------------------------------|--------|--------------------------------|
@@ -140,13 +249,16 @@
 | stripe_classes                | array  | array()                        |
 | class                         | string | Style::BASE_STYLE              |
 | individual_filtering          | bool   | false                          |
-| individual_filtering_position | string | 'foot'                         |
+| individual_filtering_position | string | 'head'                         |
 | use_integration_options       | bool   | false                          |
 | force_dom                     | bool   | false                          |
 
-## 6. Ajax
+## 7. Ajax
 
 | Option | Type   | Default |
 |------  |--------|---------|
 | url    | string | ''      |
 | type   | string | 'GET'   |
+
+## 8. Name
+Since the datatable class should extend the ``AbstractDatatableView`` and this one implements ``DatatableViewInterface``, a ``getName`` method is required. The returned value **must only include letters, numbers, underscores or dashes** as it will be a seed for the id of the generated container of the datatable.

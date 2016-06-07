@@ -11,7 +11,7 @@
     {% if image_name %}
         {% if enlarge %}
             <a href="javascript:void(0);" id="sg-enlarge_{{ image_id }}">
-                <img class="sg-thumbnail" src="{{ asset(path) | imagine_filter(filter) }}" />
+                <img class="sg-thumbnail" src="{{ path | imagine_filter(filter) }}" />
             </a>
 
             <div class="modal fade" id="sg-image-modal_{{ image_id }}">
@@ -33,13 +33,16 @@
             <script type="text/javascript">
                 $(function() {
                     $("#sg-enlarge_{{ image_id }}").on("click", function() {
-                        $("#sg-imageview_{{ image_id }}").attr("src", "{{ asset(path) }}");
+                        {% if enlarged_filter %}
+                            {% set enlargedPath = asset(path)|imagine_filter(enlarged_filter) %}
+                        {% endif %}
+                        $("#sg-imageview_{{ image_id }}").attr("src", "{{ enlargedPath|default(asset(path)) }}");
                         $("#sg-image-modal_{{ image_id }}").modal("show");
                     });
                 });
             </script>
         {% else %}
-            <img class="sg-thumbnail" src="{{ asset(path) | imagine_filter(filter) }}" />
+            <img class="sg-thumbnail" src="{{ path | imagine_filter(filter) }}" />
         {% endif %}
     {% else %}
         {% if holder_url %}

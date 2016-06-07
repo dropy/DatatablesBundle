@@ -4,23 +4,17 @@
 
 [![knpbundles.com](http://knpbundles.com/stwe/DatatablesBundle/badge)](http://knpbundles.com/stwe/DatatablesBundle)
 
+[![Build Status](https://travis-ci.org/stwe/DatatablesBundle.svg?branch=master)](https://travis-ci.org/stwe/DatatablesBundle)
+
 [![Latest Stable Version](https://poser.pugx.org/sg/datatablesbundle/v/stable)](https://packagist.org/packages/sg/datatablesbundle) [![Total Downloads](https://poser.pugx.org/sg/datatablesbundle/downloads)](https://packagist.org/packages/sg/datatablesbundle) [![Latest Unstable Version](https://poser.pugx.org/sg/datatablesbundle/v/unstable)](https://packagist.org/packages/sg/datatablesbundle) [![License](https://poser.pugx.org/sg/datatablesbundle/license)](https://packagist.org/packages/sg/datatablesbundle)
 
-## 1. Recent Changes
-
-Nothing since Version 0.10.
-
-## 2. Screenshots
+## Screenshots
 
 ### Table with Bootstrap3 integration: 
 
-<div style="text-align:center"><img alt="Screenshot" src="https://github.com/stwe/DatatablesBundle/raw/master/Resources/images/bs3.jpg"></div>
+<div style="text-align:center"><img alt="Screenshot" src="https://github.com/stwe/DatatablesBundle/raw/master/Resources/images/sc1.jpg"></div>
 
-### Table with default stylesheet (`display`): 
-
-<div style="text-align:center"><img alt="Screenshot" src="https://github.com/stwe/DatatablesBundle/raw/master/Resources/images/display.jpg"></div>
-
-## 3. Documentation
+## Documentation
 
 [Installation](https://github.com/stwe/DatatablesBundle/blob/master/Resources/doc/installation.md)
 
@@ -44,11 +38,11 @@ Nothing since Version 0.10.
 
 [Reference configuration](https://github.com/stwe/DatatablesBundle/blob/master/Resources/doc/configuration.md)
 
-## 4. Example
+## Example
 
 [Demo Application](https://github.com/stwe/DtBundleDemo)
 
-## 5. Integrating 3rd party stuff 
+## Integrating 3rd party stuff 
 
 [Integrate Bootstrap3](https://github.com/stwe/DatatablesBundle/blob/master/Resources/doc/bootstrap3.md)
 
@@ -56,29 +50,29 @@ Nothing since Version 0.10.
 
 [Integrate the LiipImagineBundle / ImageColumn, GalleryColumn and thumbnails](https://github.com/stwe/DatatablesBundle/blob/master/Resources/doc/thumbs.md)
 
-## 6. Limitations and Known Issues
+## Limitations and Known Issues
 
 Much like every other piece of software `SgDatatablesBundle` is not perfect and far from feature complete.
 
 ### Use this Bundle in ServerSide mode
 
-The ClientSide mode currently does not work with all features. There are some problems with the Buttons-Extension and MultiSelectColumn. 
-At the moment I can not say whether the ClientSide mode is supported by me in the future. Priority has the ServerSide mode.
+The ClientSide mode is no longer supported by me.
 
 ### Other limitations
 
 - This bundle does not support multiple Ids
-- 4th level associations are currently not supported
 - Searching and filtering on a virtual column not yet implemented and disabled by default
-- PostgreSql is not supported
+- PostgreSql is currently not fully supported
 
-## 7. Reporting an issue or a feature request
+## Reporting an issue or a feature request
 
 Issues and feature requests are tracked in the [Github issue tracker](https://github.com/stwe/DatatablesBundle/issues).
 
-## 8. Friendly License
+**You must know that all the pull requests you are going to submit must be released under the MIT license.**
 
-This bundle is available under the MIT license. See the complete license in the bundle:
+## Friendly License
+
+This bundle is under the MIT license. See the complete license in the bundle:
 
     Resources/meta/LICENSE
 

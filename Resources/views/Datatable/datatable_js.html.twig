@@ -39,7 +39,7 @@
             $.extend(defaults, columns);
             $.extend(defaults, searchCols);
 
-            if ( $.fn.dataTable.isDataTable( selector ) ) {
+            if ($.fn.DataTable.isDataTable(selector)) {
                 {#
                     to check if datatable already exists
                 #}
@@ -65,9 +65,21 @@
                         )
                     {% endif %}
                 {% endif %}
-                .DataTable(defaults).on('draw.dt', function() {
+                {% include "SgDatatablesBundle:Datatable:before_events.js.twig" %}
+                .DataTable(defaults)
+                        .on('draw.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
-                        });
+                        })
+                        {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
+                        {% if view_features.extensions.responsive is defined %}
+                            {% if true == view_features.extensions.responsive %}
+                                .on( 'responsive-display', function ( e, datatable, row, showHide, update ) {
+                                    if (showHide) {
+                                        {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
+                                    }
+                                });
+                            {% endif %}
+                        {% endif %}
             }
 
             {% if view_options.individualFiltering %}
@@ -80,34 +92,9 @@
                     $(selector + '_wrapper tfoot tr').clone().insertAfter($(selector + '_wrapper thead tr').first());
                 {% endif %}
 
-                try {
-                    var daterange = $(selector + '_wrapper' + ' input[name="daterange"]');
-                    moment.locale("{{ app.request.locale }}");
-                    $(daterange).daterangepicker({
-                        autoUpdateInput: false,
-                        locale: {
-                            format: "{{ 'daterange.format'|trans({}, 'messages') }}",
-                            applyLabel: "{{ 'daterange.apply'|trans({}, 'messages') }}",
-                            cancelLabel: "{{ 'daterange.cancel'|trans({}, 'messages') }}",
-                            daysOfWeek: moment.weekdaysMin(),
-                            monthNames: moment.monthsShort(),
-                            firstDay: moment.localeData().firstDayOfWeek()
-                        }
-                    }).on('cancel.daterangepicker', function(ev, picker) {
-                        $(this).val('');
-                        $(this).change();
-                    })
-                    .on('apply.daterangepicker', function(ev, picker) {
-                        $(this).val(picker.startDate.format("{{ 'daterange.format'|trans({}, 'messages') }}") + ' - ' + picker.endDate.format("{{ 'daterange.format'|trans({}, 'messages') }}"));
-                        $(this).change();
-                    });
-                } catch (e) {
-                    console.log(e.message);
-                }
-
                 {# "foot" position -> datatable_html.html.twig #}
 
-                var throttledSearch = $.fn.dataTable.util.throttle(
+                var throttledSearch = $.fn.DataTable.util.throttle(
                     function (event) {
                         if (event.type == "keyup") {
                             if (
@@ -123,13 +110,13 @@
                         }
 
                         oTable
-                                .column($(this).parent().index() + ':visible')
+                                .column($(event.currentTarget).data('filter-property-id'))
                                 .search(this.value)
                                 .draw();
                     },
                     options.searchDelay
                 );
-                
+
                 $(selector + "_wrapper").find("tr input.individual_filtering").on("keyup change", throttledSearch);
 
                 $(selector + "_wrapper" + " select.individual_filtering").on("keyup change", function(event) {
@@ -155,6 +142,10 @@
 
 {% block sg_datatable_render_functions %}
 
-    {% include "SgDatatablesBundle:Datatable:render_functions.html.twig" %}
+    <script type="text/javascript">
+        if (typeof window.renderFunctionsAlreadyLoaded == 'undefined') {
+            {% include "SgDatatablesBundle:Datatable:render_functions.js.twig" %}
+        }
+    </script>
 
 {% endblock %}
