@@ -34,8 +34,10 @@ $(".{{ view_table_id }}_multiselect_checkall").click(function(event) {
     var that = this;
     $("input.{{ view_table_id }}_multiselect_checkbox:checkbox").each(function() {
         this.checked = that.checked;
+        $(this).change();
     });
 });
+
 
 $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
     var length = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked").length;
