@@ -143,9 +143,9 @@
 {% block sg_datatable_render_functions %}
 
     <script type="text/javascript">
-        console.log("test");
+
         if (typeof window.renderFunctionsAlreadyLoaded == 'undefined') {
-            console.log("load render");
+
             {% include "SgDatatablesBundle:Datatable:render_functions.js.twig" %}
         }
     </script>
