@@ -8,7 +8,12 @@
  #}
 routeParameters = new Array();
 attributes = "";
+visibleFlag = true;
 roleFlag = true;
+
+{% for key, value in action.renderIf %}
+    visibleFlag &= Boolean(row.{{ key }} == '{{ value|raw }}');
+{% endfor %}
 
 {% if action.role %}
     roleFlag = false;
@@ -17,7 +22,7 @@ roleFlag = true;
     {% endif %}
 {% endif %}
 
-if (row.actions["{{ action.route }}"] && true == roleFlag) {
+if (row.actions.{{ action.route }} && true == roleFlag) {
     {% for key, value in action.routeParameters %}
         routeParameters["{{ key }}"] = row.{{ value }};
     {% endfor %}
