@@ -58,6 +58,7 @@ class Column extends AbstractColumn
      */
     protected $editable_title;
 
+    /**
      * Role based editing permission.
      *
      * @var null|string
@@ -125,7 +126,7 @@ class Column extends AbstractColumn
 
             'editable_route' => '',
             'editable_type' => '',
-            'editable_title' => ''
+            'editable_title' => '',
 
             'editable_role' => null
 
@@ -212,7 +213,7 @@ class Column extends AbstractColumn
     }
 
     /**
-
+     *
      * @return string
      */
     public function getEditableRoute()
@@ -262,7 +263,7 @@ class Column extends AbstractColumn
 
 
 
-
+    /**
      * Set editable role.
      *
      * @param null|string $editableRole
