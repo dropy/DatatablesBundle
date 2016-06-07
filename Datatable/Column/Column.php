@@ -150,8 +150,8 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('editable_type', 'string');
         $resolver->setAllowedTypes('editable_title', 'string');
 
-        $resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
-        $resolver->setAllowedValues('filter_type', array('text', 'select'));
+        //$resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
+        //$resolver->setAllowedValues('filter_type', array('text', 'select'));
         $resolver->setAllowedValues('editable_type', array('text', 'number','datetime',''));
 
         $resolver->setAllowedTypes('editable_role', array('string', 'null'));
