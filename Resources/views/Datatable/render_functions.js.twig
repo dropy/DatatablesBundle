@@ -83,6 +83,7 @@ function render_progress_bar(data, type, row, meta, barClasses, min, max, label,
 function render_editable_text(data, type, row, meta, colData, title) {
     if (data != null) {
         var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
         var spanClass = "sg-editable-" + str;
         var result = '<span class="' + spanClass + '"';
         if(title!=null && title.trim()!='')
