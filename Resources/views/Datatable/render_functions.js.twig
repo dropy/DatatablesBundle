@@ -150,6 +150,28 @@ function render_editable_multiselect(data, type, row, meta, colData, title) {
     }
 }
 
+function render_editable_category(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        var values = '';
+        for(var i = 0;i<row.categories.length;i++){
+            values += row.categories[i].id+',' ;
+        }
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+        result += 'data-pk="' + row.id + '" data-value="'+values+'" data-type="select2"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+
 function render_editable_datetime(data, type, row, meta, colData, dateFormat, title) {
     if (data != null && typeof data.timestamp != "undefined") {
         moment.locale("{{ app.request.locale }}");

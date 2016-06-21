@@ -161,7 +161,7 @@ class Column extends AbstractColumn
 
         //$resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
         //$resolver->setAllowedValues('filter_type', array('text', 'select'));
-        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime','select','multiselect',''));
+        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime','select','multiselect','category',''));
 
         $resolver->setAllowedTypes('editable_role', array('string', 'null'));
 

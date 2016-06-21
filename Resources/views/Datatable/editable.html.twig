@@ -28,7 +28,7 @@
                 {% if 'boolean' == column.alias %}
                 source: [{'true': "{{ column.trueLabel ? column.trueLabel : 'true' }}"}, {'false': "{{ column.falseLabel ? column.falseLabel : 'false' }}"}],
                 emptytext: 'false',
-                {% elseif ('select' == column.editableType) or ('multiselect' == column.editableType) %}
+                {% elseif ('select' == column.editableType) or ('multiselect' == column.editableType)  or ('category' == column.editableType) %}
                 source: [
                     {% for key, value in  column.editableData %}
                         {
@@ -41,7 +41,7 @@
                 {% else %}
                 emptytext: 'Aucune valeur',
                 {% endif %}
-                {% if ('multiselect' == column.editableType) %}
+                {% if ('multiselect' == column.editableType)  or ('category' == column.editableType) %}
                 select2: {
                     multiple: true,
                     width: 200,
