@@ -28,6 +28,16 @@
                 {% if 'boolean' == column.alias %}
                 source: [{'true': "{{ column.trueLabel ? column.trueLabel : 'true' }}"}, {'false': "{{ column.falseLabel ? column.falseLabel : 'false' }}"}],
                 emptytext: 'false',
+                {% elseif ('select' == column.editableType) or ('multiselect' == column.editableType) %}
+                source: [
+                    {% for key, value in  column.editableData %}
+                        {
+                    value: {{ key }},
+                        text: {% if value is empty %} '{{ key }}' {% else %}'{{ value }}'{%  endif %}
+                        },
+                    {% endfor %}
+                    ],
+                emptytext: 'Aucune valeur',
                 {% else %}
                 emptytext: 'Aucune valeur',
                 {% endif %}

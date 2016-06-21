@@ -114,6 +114,42 @@ function render_editable_number(data, type, row, meta, colData, title) {
     }
 }
 
+function render_editable_select(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+
+        result += 'data-pk="' + row.id + '"data-type="select"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+function render_editable_multiselect(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+
+        result += 'data-pk="' + row.id + '"data-type="checkList"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
 function render_editable_datetime(data, type, row, meta, colData, dateFormat, title) {
     if (data != null && typeof data.timestamp != "undefined") {
         moment.locale("{{ app.request.locale }}");

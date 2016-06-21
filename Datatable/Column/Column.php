@@ -52,6 +52,13 @@ class Column extends AbstractColumn
     protected $editable_type;
 
     /**
+     * Editable optionnal type .
+     *
+     * @var array
+     */
+    protected $editable_data;
+
+    /**
      * Editable optionnal title .
      *
      * @var string
@@ -126,6 +133,7 @@ class Column extends AbstractColumn
 
             'editable_route' => '',
             'editable_type' => '',
+            'editable_data' => array(),
             'editable_title' => '',
 
             'editable_role' => null
@@ -148,11 +156,12 @@ class Column extends AbstractColumn
 
         $resolver->setAllowedTypes('editable_route', 'string');
         $resolver->setAllowedTypes('editable_type', 'string');
+        $resolver->setAllowedTypes('editable_data','array');
         $resolver->setAllowedTypes('editable_title', 'string');
 
         //$resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
         //$resolver->setAllowedValues('filter_type', array('text', 'select'));
-        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime',''));
+        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime','select','multiselect',''));
 
         $resolver->setAllowedTypes('editable_role', array('string', 'null'));
 
@@ -244,6 +253,23 @@ class Column extends AbstractColumn
     {
         $this->editable_type = $editable_type;
     }
+
+    /**
+     * @return array
+     */
+    public function getEditableData()
+    {
+        return $this->editable_data;
+    }
+
+    /**
+     * @param array $editable_data
+     */
+    public function setEditableData($editable_data)
+    {
+        $this->editable_data = $editable_data;
+    }
+
 
     /**
      * @return string
