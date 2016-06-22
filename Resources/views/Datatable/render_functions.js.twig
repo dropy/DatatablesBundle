@@ -88,7 +88,7 @@ function render_editable_text(data, type, row, meta, colData, title) {
         var result = '<span class="' + spanClass + '"';
         if(title!=null && title.trim()!='')
             result += 'data-title="' + title + '" ';
-        result += 'data-pk="' + row.id + '"data-type="text"' + '>' + data + '</span>';
+        result += 'data-pk="' + row.id + '" data-type="text"' + '>' + data + '</span>';
 
         return result;
     } else {
@@ -106,7 +106,7 @@ function render_editable_number(data, type, row, meta, colData, title) {
             result += 'data-title="' + title + '" ';
         }
 
-        result += 'data-pk="' + row.id + '"data-type="number"' + '>' + data + '</span>';
+        result += 'data-pk="' + row.id + '" data-type="number"' + '>' + data + '</span>';
 
         return result;
     } else {
@@ -124,7 +124,7 @@ function render_editable_select(data, type, row, meta, colData, title) {
             result += 'data-title="' + title + '" ';
         }
 
-        result += 'data-pk="' + row.id + '"data-type="select"' + '>' + data + '</span>';
+        result += 'data-pk="' + row.id + '" data-type="select"' + '>' + data + '</span>';
 
         return result;
     } else {
