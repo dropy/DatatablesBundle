@@ -27,6 +27,14 @@ class MultiselectAction extends AbstractAction
      */
     protected $tableName;
 
+
+    /**
+     * Display the action into a dropdown list
+     *
+     * @var boolean
+     */
+    protected $dropdown;
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -43,7 +51,8 @@ class MultiselectAction extends AbstractAction
             'icon' => '',
             'label' => '',
             'attributes' => array(),
-            'role' => ''
+            'role' => '',
+            'dropdown'=>false
         ));
 
         $resolver->setAllowedTypes('route', 'string');
@@ -52,6 +61,7 @@ class MultiselectAction extends AbstractAction
         $resolver->setAllowedTypes('label', 'string');
         $resolver->setAllowedTypes('attributes', 'array');
         $resolver->setAllowedTypes('role', 'string');
+        $resolver->setAllowedTypes('dropdown', 'bool');
 
         $tableName = $this->tableName;
         $resolver->setNormalizer('attributes', function($options, $value) use($tableName) {

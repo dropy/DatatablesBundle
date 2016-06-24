@@ -31,6 +31,7 @@ class ActionColumn extends AbstractColumn
      *
      * @var string
      */
+
     protected $startHtml;
 
     /**

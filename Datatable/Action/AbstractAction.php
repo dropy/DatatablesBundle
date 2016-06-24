@@ -86,6 +86,7 @@ abstract class AbstractAction implements ActionInterface, OptionsInterface
      */
     protected $role;
 
+
     //-------------------------------------------------
     // Ctor.
     //-------------------------------------------------
@@ -144,7 +145,8 @@ abstract class AbstractAction implements ActionInterface, OptionsInterface
             'confirm' => false,
             'confirm_message' => '',
             'attributes' => array(),
-            'role' => ''
+            'role' => '',
+
         ));
 
         $resolver->setAllowedTypes('route', 'string');
@@ -155,6 +157,7 @@ abstract class AbstractAction implements ActionInterface, OptionsInterface
         $resolver->setAllowedTypes('confirm_message', 'string');
         $resolver->setAllowedTypes('attributes', 'array');
         $resolver->setAllowedTypes('role', 'string');
+
 
         return $this;
     }
@@ -200,6 +203,23 @@ abstract class AbstractAction implements ActionInterface, OptionsInterface
 
         return $this;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isDropdown()
+    {
+        return $this->dropdown;
+    }
+
+    /**
+     * @param boolean $dropdown
+     */
+    public function setDropdown($dropdown)
+    {
+        $this->dropdown = $dropdown;
+    }
+
 
     /**
      * Get route parameters.

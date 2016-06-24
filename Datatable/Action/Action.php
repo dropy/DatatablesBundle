@@ -24,6 +24,8 @@ class Action extends AbstractAction
      * @var Closure|array
      */
     protected $renderIf;
+
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -34,6 +36,7 @@ class Action extends AbstractAction
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('render_if', array());
+
 
         return $this;
     }

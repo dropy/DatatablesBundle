@@ -12,6 +12,8 @@
 
 <div class="multiselect-action-fixed" >
     <div class="multiselect-action-input-fixed">
+        {% set buttonActions = '' %}
+        {% set dropDownActions = '' %}
 
         {% for action in column.actions %}
             {% set visible = (action.role and app.user is not null and is_granted(action.role) or not action.role) ? true : false %}
@@ -21,9 +23,30 @@
                 {% set attributes %}
                     {% for key, value in action.attributes %} {{ key }}='{{ value }}'{% endfor %}
                 {% endset %}
-                <a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a>
+                {% if action.dropdown %}
+                    {% set dropDownActions %}
+                        {{ dropDownActions }}<li><a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a></li>
+                    {% endset %}
+                {% else %}
+                    {% set buttonActions %}
+                        {{ buttonActions }} <a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a>
+                    {% endset %}
+                {% endif %}
             {% endif %}
         {% endfor %}
+
+        {% if dropDownActions != '' %}
+            <div class="dropup multiselect-action-dropdown  ">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu ">
+                    {{ dropDownActions }}
+                </ul>
+            </div>
+        {% endif %}
+
+        {{ buttonActions }}
     </div>
 </div>
 {% endset %}
