@@ -15,6 +15,7 @@ use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -783,6 +784,16 @@ class DatatableQuery
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
+    }
+
+    /**
+     * Generate the view used to display the form into the multiselect modal
+     * @param AbstractType $formType
+     */
+    public function getMultiselectModalFormView(AbstractType $formType){
+
+
+
     }
 
     /**

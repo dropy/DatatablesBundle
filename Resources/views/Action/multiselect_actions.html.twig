@@ -70,7 +70,6 @@ $(".{{ view_table_id }}_multiselect_checkall").click(function(event) {
 
 $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
     var length = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked").length;
-
     event.preventDefault();
 
     if (length > 0) {
