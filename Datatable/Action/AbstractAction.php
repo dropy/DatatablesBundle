@@ -204,22 +204,6 @@ abstract class AbstractAction implements ActionInterface, OptionsInterface
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isDropdown()
-    {
-        return $this->dropdown;
-    }
-
-    /**
-     * @param boolean $dropdown
-     */
-    public function setDropdown($dropdown)
-    {
-        $this->dropdown = $dropdown;
-    }
-
 
     /**
      * Get route parameters.

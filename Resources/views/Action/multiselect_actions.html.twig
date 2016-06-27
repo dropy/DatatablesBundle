@@ -20,16 +20,22 @@
 
             {% if visible %}
                 {% set route = action.route ? path(action.route, action.routeParameters) : '' %}
+                {% set route = action.modalFormRoute ? path(action.modalFormRoute,  action.routeParameters) : route %}
                 {% set attributes %}
                     {% for key, value in action.attributes %} {{ key }}='{{ value }}'{% endfor %}
                 {% endset %}
+
+                {%  set link  %}
+                    <a href="{{ route }}" {{ attributes }} {% if action.modalFormRoute != '' %} data-use-modal="true" {% endif %}>{{ datatable_icon(action.icon, action.label) }}</a>
+                {% endset %}
+
                 {% if action.dropdown %}
                     {% set dropDownActions %}
-                        {{ dropDownActions }}<li><a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a></li>
+                        {{ dropDownActions }}<li>{{ link }}</li>
                     {% endset %}
                 {% else %}
                     {% set buttonActions %}
-                        {{ buttonActions }} <a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a>
+                        {{ buttonActions }} {{ link }}
                     {% endset %}
                 {% endif %}
             {% endif %}
@@ -75,7 +81,6 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
         if (
             $(this).attr("href") == "{{ path('partnerui_add_link_products_seller_ajax') }}"
         ) {
-
             addPoductSellerDatatable(oTable,"{{ path('partnerui_get_selected_products_results_ajax') }}","{{ path('partnerui_add_link_products_seller_ajax') }}","{{ view_table_id }}");
             return;
         }
@@ -91,7 +96,17 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 'token': '{{ token }}'
             },
             success: function(msg) {
-                oTable.draw();
+                //check if the action must display a modal before validating
+                if (
+                    $(this).attr('data-use-modal') != ''
+                ){
+                    console.log(msg);
+                    var modal = $("#{{ view_table_id }}_multiselect__modal");
+                    modal.find(".modal-body").html(msg);
+                    modal.modal();
+                }else
+                    oTable.draw();
+
                 if(msg && msg.message){
                     alert(msg.message);
                 }
@@ -104,3 +119,6 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
         alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
     }
 });
+
+
+
