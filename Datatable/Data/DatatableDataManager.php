@@ -13,6 +13,7 @@ namespace Sg\DatatablesBundle\Datatable\Data;
 
 use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Serializer;
@@ -144,5 +145,18 @@ class DatatableDataManager
         );
 
         return $query;
+    }
+
+    /**
+     * Generate the view used to display the form into the multiselect modal
+     * @param AbstractType $formType
+     */
+    public function getMultiselectModalFormView($formType, $entity = null){
+        return $this->twig->render(
+            'SgDatatablesBundle:Action:form_modal.html.twig',
+            array(
+                'modal_form'=>$formType->createView()
+            )
+        );
     }
 }

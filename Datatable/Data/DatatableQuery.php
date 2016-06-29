@@ -787,16 +787,6 @@ class DatatableQuery
     }
 
     /**
-     * Generate the view used to display the form into the multiselect modal
-     * @param AbstractType $formType
-     */
-    public function getMultiselectModalFormView(AbstractType $formType){
-
-
-
-    }
-
-    /**
      * Simple function to get results for export to PHPExcel.
      *
      * @return array
