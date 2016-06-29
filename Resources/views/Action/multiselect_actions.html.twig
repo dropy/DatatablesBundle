@@ -99,13 +99,11 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 if (
                     $(this).attr('data-use-modal') != ''
                 ){
-                    console.log(msg);
-                    var modal = $("#{{ view_table_id }}_multiselect__modal");
+                    var modal = $("#{{ view_table_id }}_multiselect_modal");
                     modal.find(".modal-body").html(msg);
                     modal.modal();
                 }else
                     oTable.draw();
-
                 if(msg && msg.message){
                     alert(msg.message);
                 }
