@@ -16,8 +16,12 @@
      <div class="multiselect-action" >
          <div class="multiselect-action-input">
  {% endif %}
+     {% set buttonActions = '' %}
+     {% set dropDownActions = '' %}
         {% for action in column.actions %}
+
             {% set visible = (action.role and app.user is not null and is_granted(action.role) or not action.role) ? true : false %}
+
 
             {% if visible %}
                 {% set route = action.route ? path(action.route, action.routeParameters) : '' %}
