@@ -158,6 +158,13 @@ class Options extends AbstractViewOptions
      */
     protected $forceDom;
 
+    /**
+     * Set multiselect actions as fixed or not fixed
+     *
+     * @var boolean
+     */
+    protected $fixMultiselect;
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -188,6 +195,7 @@ class Options extends AbstractViewOptions
             'display_start' => 0,
             'defer_loading' => -1,
             'dom' => 'lfrtip',
+            'fix_multiselect' => true,
             'length_menu' => array(10, 25, 50, 100),
             'order_classes' => true,
             'order' => array(array(0, 'asc')),
@@ -209,6 +217,7 @@ class Options extends AbstractViewOptions
         $resolver->setAllowedTypes('display_start', 'int');
         $resolver->setAllowedTypes('defer_loading', 'int');
         $resolver->setAllowedTypes('dom', 'string');
+        $resolver->setAllowedTypes('fix_multiselect', 'bool');
         $resolver->setAllowedTypes('length_menu', 'array');
         $resolver->setAllowedTypes('order_classes', 'bool');
         $resolver->setAllowedTypes('order', 'array');
@@ -700,5 +709,29 @@ class Options extends AbstractViewOptions
     public function getForceDom()
     {
         return $this->forceDom;
+    }
+
+    /**
+     * Fix multiselect action.
+     *
+     * @param boolean $fixMultiselect
+     *
+     * @return $this
+     */
+    protected function setFixMultiselect($fixMultiselect)
+    {
+        $this->fixMultiselect = $fixMultiselect;
+
+        return $this;
+    }
+
+    /**
+     * Get force dom.
+     *
+     * @return boolean
+     */
+    public function getFixMultiselect()
+    {
+        return $this->fixMultiselect;
     }
 }

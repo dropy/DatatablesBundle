@@ -9,12 +9,13 @@
 {% set visible = false %}
 
 {% set multiple_actions %}
-
-<div class="multiselect-action-fixed" >
-    <div class="multiselect-action-input-fixed">
-        {% set buttonActions = '' %}
-        {% set dropDownActions = '' %}
-
+{% if view_options.fixMultiselect %}
+    <div class="multiselect-action-fixed" >
+        <div class="multiselect-action-input-fixed">
+{% else %}
+     <div class="multiselect-action" >
+         <div class="multiselect-action-input">
+ {% endif %}
         {% for action in column.actions %}
             {% set visible = (action.role and app.user is not null and is_granted(action.role) or not action.role) ? true : false %}
 
