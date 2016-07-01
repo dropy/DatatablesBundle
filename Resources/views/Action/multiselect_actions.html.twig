@@ -102,6 +102,7 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 ){
 
                     var modal = $("#{{ view_table_id }}_multiselect_modal");
+                    console.log(modal)
                     modal.find(".modal-body").html(msg);
                     modal.find(".modal-form").attr("action",href);
                     modal.modal();
@@ -133,7 +134,7 @@ $(".modal-form").on('submit', function(event) {
     var i = 0 ;
     idArray.forEach(function(object) {
         var newObject = {
-            'name' : object.name+'['+i+']',
+            'name' : 'data['+i+']',
             'value':object.value
         };
         idFormatedArray.push(newObject);
@@ -149,7 +150,8 @@ $(".modal-form").on('submit', function(event) {
         success: function(msg) {
            //check if the action must display a modal before validating
             oTable.draw();
-            $('#{{ view_table_id }}_multiselect_modal').modal().hide();
+            var modal = $("#{{ view_table_id }}_multiselect_modal");
+            modal.modal('toggle');
             if(msg && msg.message){
                 alert(msg.message);
             }
