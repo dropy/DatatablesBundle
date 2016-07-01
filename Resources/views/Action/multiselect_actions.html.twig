@@ -85,9 +85,10 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
         }
 
         {% set token = csrf_token('multiselect') %}
-
+        var href = $(this).attr("href");
+        var useModal = $(this).data("use-modal");
         $.ajax({
-            url: $(this).attr("href"),
+            url: href,
             type: "POST",
             cache: false,
             data: {
@@ -97,11 +98,14 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
             success: function(msg) {
                 //check if the action must display a modal before validating
                 if (
-                    $(this).attr('data-use-modal') != ''
+                    useModal != '' && typeof useModal != 'undefined'
                 ){
+
                     var modal = $("#{{ view_table_id }}_multiselect_modal");
                     modal.find(".modal-body").html(msg);
+                    modal.find(".modal-form").attr("action",href);
                     modal.modal();
+
                 }else
                     oTable.draw();
                 if(msg && msg.message){
@@ -117,5 +121,44 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
     }
 });
 
+$(".modal-form").on('submit', function(event) {
+
+    event.preventDefault();
+
+    {% set token = csrf_token('multiselect') %}
+    var action = $(this).closest("form").attr("action");
+    var formName = $("#form_multiselect_modal").data("form-name");
+    var idArray = $("input:checkbox:checked.{{ view_table_id }}_multiselect_checkbox", oTable.rows().nodes()).serializeArray();
+    var idFormatedArray = [];
+    var i = 0 ;
+    idArray.forEach(function(object) {
+        var newObject = {
+            'name' : object.name+'['+i+']',
+            'value':object.value
+        };
+        idFormatedArray.push(newObject);
+        i++;
+    },idFormatedArray,i);
+    var data = $(this).serializeArray();
+    data = data.concat(idFormatedArray);
+    $.ajax({
+        url: action,
+        type: 'POST',
+        cache: false,
+        data: data,
+        success: function(msg) {
+           //check if the action must display a modal before validating
+            oTable.draw();
+            $('#{{ view_table_id }}_multiselect_modal').modal().hide();
+            if(msg && msg.message){
+                alert(msg.message);
+            }
+        },
+
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
+        }
+    });
+});
 
 
