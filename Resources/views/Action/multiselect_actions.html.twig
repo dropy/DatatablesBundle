@@ -102,7 +102,6 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 ){
 
                     var modal = $("#{{ view_table_id }}_multiselect_modal");
-                    console.log(modal)
                     modal.find(".modal-body").html(msg);
                     modal.find(".modal-form").attr("action",href);
                     modal.modal();
