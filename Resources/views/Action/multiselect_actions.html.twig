@@ -152,12 +152,20 @@ $(".modal-form").on('submit', function(event) {
         cache: false,
         data: data,
         success: function(msg) {
-           //check if the action must display a modal before validating
-            oTable.draw();
-            var modal = $("#{{ view_table_id }}_multiselect_modal");
-            modal.modal('toggle');
-            if(msg && msg.message){
+            if(msg.toLowerCase() == 'success'){
+                //check if the action must display a modal before validating
+                oTable.draw();
+                var modal = $("#{{ view_table_id }}_multiselect_modal");
+                modal.modal('toggle');
+            }
+            else if(msg && msg.message){
                 alert(msg.message);
+            }
+            else{
+                var modal = $("#{{ view_table_id }}_multiselect_modal");
+                modal.find(".modal-body").html(msg);
+                modal.find(".modal-form").attr("action",href);
+                modal.modal();
             }
         },
 
