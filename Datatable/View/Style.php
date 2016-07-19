@@ -123,4 +123,6 @@ class Style
      * @var string
      */
     const FULL_NUMBERS_PAGINATION = 'full_numbers';
+
+    const INPUT_NUMBER_PAGINATION = 'input';
 }

@@ -201,7 +201,7 @@ class Options extends AbstractViewOptions
             'order' => array(array(0, 'asc')),
             'order_multi' => true,
             'page_length' => 10,
-            'paging_type' => Style::FULL_NUMBERS_PAGINATION,
+            'paging_type' => Style::INPUT_NUMBER_PAGINATION,
             'renderer' => '',
             'scroll_collapse' => false,
             'search_delay' => 0,
