@@ -89,7 +89,6 @@
             nOf.className = paginateOfClassName;
             nPage.className = paginatePageClassName;
             nInput.className = paginateInputClassName;
-            nInput.placeholder = "Page n°";
 
             if (oSettings.sTableId !== '') {
                 nPaging.setAttribute('id', oSettings.sTableId + '_' + paginateClassName);
@@ -142,14 +141,24 @@
                 }
             });
 
+            $(nInput).focus(function(e){
+                nInput.value = '';
+            });
+
             $(nInput).keyup(function (e) {
                 // 38 = up arrow, 39 = right arrow
                 if (e.which === 38 || e.which === 39) {
                     this.value++;
                 }
+
                 // 37 = left arrow, 40 = down arrow
                 else if ((e.which === 37 || e.which === 40) && this.value > 1) {
                     this.value--;
+                }
+
+                if (e.which === 13) {
+                    fnCallbackDraw(oSettings);
+                    $(':focus').blur();
                 }
 
                 if (this.value === '' || this.value.match(/[^0-9]/)) {
@@ -158,7 +167,10 @@
                     return;
                 }
 
+
+
                 var iNewStart = oSettings._iDisplayLength * (this.value - 1);
+
                 if (iNewStart < 0) {
                     iNewStart = 0;
                 }
@@ -179,15 +191,19 @@
             if (iPages <= 1) {
                 $(nPaging).hide();
             }
+
+
         },
 
         'fnUpdate': function (oSettings) {
             if (!oSettings.aanFeatures.p) {
                 return;
             }
-
             var iPages = calcPages(oSettings);
             var iCurrentPage = calcCurrentPage(oSettings);
+
+            var displayInput = document.getElementsByClassName('paginate_input')[0];
+                displayInput.placeholder = "Page "+iCurrentPage+ " sur " +iPages;
 
             var an = oSettings.aanFeatures.p;
             if (iPages <= 1) // hide paging when we can't page
@@ -221,10 +237,11 @@
                 .addClass(disableClasses[lastClassName]);
 
             // Paginate of N pages text
-            $(an).children('.' + paginateOfClassName).html(' of ' + iPages);
+            //$(an).children('.' + paginateOfClassName).html(' of ' + iPages);
 
             // Current page numer input value
-            $(an).children('.' + paginateInputClassName).val(iCurrentPage);
+            //$(an).children('.' + paginateInputClassName).val(iCurrentPage);
+            displayInput.value = displayInput.placeholder;
         }
     };
 })(jQuery);
