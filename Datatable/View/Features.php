@@ -149,7 +149,7 @@ class Features extends AbstractViewOptions
             'scroll_y' => '',
             'searching' => true,
             'server_side' => true,
-            'state_save' => false,
+            'state_save' => true,
             'delay' => 0,
             'extensions' => array()
         ));
