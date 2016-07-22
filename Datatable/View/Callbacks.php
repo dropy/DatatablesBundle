@@ -139,9 +139,13 @@ class Callbacks extends AbstractViewOptions
             'row_callback' => array(),
             'state_load_callback' => array(),
             'state_loaded' => array(),
-            'state_load_params' => array(),
+            'state_load_params' => array(
+                'template' => '@DropyWebUi/Datatables/Callbacks/load_filter_params_callback.js.twig'
+            ),
             'state_save_callback' => array(),
-            'state_save_params' => array(),
+            'state_save_params' => array(
+                'template' => '@DropyWebUi/Datatables/Callbacks/save_filter_params_callback.js.twig'
+            ),
         ));
 
         $resolver->setAllowedTypes('created_row', 'array');
