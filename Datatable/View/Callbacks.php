@@ -134,17 +134,21 @@ class Callbacks extends AbstractViewOptions
             'format_number' => array(),
             'header_callback' => array(),
             'info_callback' => array(),
-            'init_complete' => array(),
+            'init_complete' => array(
+                'template' => 'SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig'
+            ),
             'pre_draw_callback' => array(),
             'row_callback' => array(),
-            'state_load_callback' => array(),
-            'state_loaded' => array(),
-            'state_load_params' => array(
-                'template' => '@DropyWebUi/Datatables/Callbacks/load_filter_params_callback.js.twig'
+            'state_load_callback' => array(
+                'template' => 'SgDatatablesBundle:Datatable:state_load_callback.js.twig'
             ),
-            'state_save_callback' => array(),
+            'state_loaded' => array(),
+            'state_load_params' => array(),
+            'state_save_callback' => array(
+                'template' => 'SgDatatablesBundle:Datatable:state_save_callback.js.twig'
+            ),
             'state_save_params' => array(
-                'template' => '@DropyWebUi/Datatables/Callbacks/save_filter_params_callback.js.twig'
+                /*'template' => '@DropyWebUi/Datatables/Callbacks/save_filter_params_callback.js.twig'*/
             ),
         ));
 

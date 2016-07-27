@@ -1,0 +1,51 @@
+function loadFilterParams(oSettings, oData){
+    /*oControls.each(function() {
+        var oControl = $(this);
+
+        $.each(oData, function(index, value) {
+            if ( index == oControl.attr('name') )
+                oControl.val( value );
+        });
+    });*/
+        var controls = document.querySelectorAll(".dataTables_scrollHead table thead tr td");
+        var data = JSON.parse( localStorage.getItem( 'DataTables_' + oSettings.sInstance ) );
+        var columsObject = data.columns;
+
+        var i = 0, nbHidden = 0;
+        while(undefined !== columsObject[i]){
+            if(columsObject[i].visible == true){
+                var oControl = controls[i-nbHidden];
+                if(oControl.children[0]){
+                    oControl.children[0].value = columsObject[i].search.search;
+                }
+            }else{
+                nbHidden++;
+            }
+            i++;
+        }
+
+
+
+
+
+
+
+
+
+        /*for(var i = 0; i < controls.length; i++) {
+            if(columsObject[i] && columsObject[i].visible == false){
+                columsObject.splice(i, i+1);
+            }
+            console.log(columsObject);
+            console.log(controls[i]);
+            console.log(columsObject[i]);
+
+            var oControl = controls[i];
+            if(oControl.children[0]){
+                oControl.children[0].value = columsObject[i].search.search;
+            }
+        }*/
+        return true;
+
+}
+
