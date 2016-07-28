@@ -134,9 +134,7 @@ class Callbacks extends AbstractViewOptions
             'format_number' => array(),
             'header_callback' => array(),
             'info_callback' => array(),
-            'init_complete' => array(
-                'template' => 'SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig'
-            ),
+            'init_complete' => array(),
             'pre_draw_callback' => array(),
             'row_callback' => array(),
             'state_load_callback' => array(

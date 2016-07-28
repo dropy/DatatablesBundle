@@ -72,6 +72,9 @@
                         .on('draw.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
                         })
+                        .on('init.dt', function() {
+                            {% include "SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig" with {'selector': view_table_id} %}
+                        })
                         {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
                         {% if view_features.extensions.responsive is defined %}
                             {% if true == view_features.extensions.responsive %}
