@@ -756,13 +756,14 @@ class DatatableQuery
         false === $buildQuery ? : $this->buildQuery();
         dump($this->execute()->getSql());
         //$fresults = new Paginator($this->execute(), true);
+
         $fresults = $this->paginator->paginate(
-            $this->execute(),/* query NOT result */
+            $this->execute(),
             1,
             10,
             array('distinct' => false)
         );
-
+        /*
         //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
 
@@ -775,7 +776,6 @@ class DatatableQuery
             foreach ($this->columns as $column) {
                 $column->renderContent($item, $this);
 
-                /** @var ActionColumn $column */
                 if ('action' === $column->getAlias()) {
                     $column->checkVisibility($item);
                 }
@@ -794,7 +794,8 @@ class DatatableQuery
         $fullOutput = $this->applyResponseCallbacks($fullOutput);
 
         $json = $this->serializer->serialize($fullOutput, 'json');
-        $response = new Response($json);
+        */
+        $response = new Response([]);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
