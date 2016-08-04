@@ -34,4 +34,6 @@ services:
             - '@sg_datatables.serializer'
             - '@twig'
             - '%sg_datatables.datatable.query%'
+            - '@knp_paginator'
             - '%kernel.bundles%'
+

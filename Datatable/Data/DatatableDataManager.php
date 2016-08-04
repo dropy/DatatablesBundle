@@ -41,6 +41,11 @@ class DatatableDataManager
     private $serializer;
 
     /**
+     * @var Serializer
+     */
+    private $paginator;
+
+    /**
      * The Twig Environment service.
      *
      * @var Twig_Environment
@@ -88,7 +93,7 @@ class DatatableDataManager
      * @param array            $configs
      * @param array            $bundles
      */
-    public function __construct(RequestStack $requestStack, Serializer $serializer, Twig_Environment $twig, array $configs, array $bundles)
+    public function __construct(RequestStack $requestStack, Serializer $serializer, Twig_Environment $twig, array $configs,$paginator,  array $bundles)
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->serializer = $serializer;
@@ -105,6 +110,7 @@ class DatatableDataManager
             $this->imagineBundle = true;
         }
 
+        $this->paginator = $paginator;
         $this->locale = $this->request->getLocale();
     }
 
@@ -141,7 +147,8 @@ class DatatableDataManager
             $this->twig,
             $this->imagineBundle,
             $this->doctrineExtensions,
-            $this->locale
+            $this->locale,
+            $this->paginator
         );
 
         return $query;

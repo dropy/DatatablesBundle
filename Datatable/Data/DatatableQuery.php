@@ -40,6 +40,11 @@ class DatatableQuery
     private $serializer;
 
     /**
+     * @var Serializer
+     */
+    private $paginator;
+
+    /**
      * @var array
      */
     private $requestParams;
@@ -180,7 +185,8 @@ class DatatableQuery
         Twig_Environment $twig,
         $imagineBundle,
         $doctrineExtensions,
-        $locale
+        $locale,
+        $paginator
     )
     {
         $this->serializer = $serializer;
@@ -211,6 +217,7 @@ class DatatableQuery
         $this->doctrineExtensions = $doctrineExtensions;
         $this->locale = $locale;
         $this->isPostgreSQLConnection = false;
+        $this->paginator = $paginator;
 
         $this->setLineFormatter();
         $this->setupColumnArrays();
@@ -747,9 +754,16 @@ class DatatableQuery
     public function getResponse($buildQuery = true)
     {
         false === $buildQuery ? : $this->buildQuery();
+        dump($this->execute()->getSql());
+        //$fresults = new Paginator($this->execute(), true);
+        $fresults = $this->paginator->paginate(
+            $this->execute(),/* query NOT result */
+            1,
+            10,
+            array('distinct' => false)
+        );
 
-        $fresults = new Paginator($this->execute(), true);
-        $fresults->setUseOutputWalkers(false);
+        //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
 
         foreach ($fresults as $item) {
