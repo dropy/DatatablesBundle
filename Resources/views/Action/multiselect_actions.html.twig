@@ -152,7 +152,7 @@ $(".modal-form").on('submit', function(event) {
         cache: false,
         data: data,
         success: function(msg) {
-            if(msg.toLowerCase() == 'success'){
+            if(typeof msg == 'string' && msg.toLowerCase() == 'success'){
                 //check if the action must display a modal before validating
                 oTable.draw();
                 var modal = $("#{{ view_table_id }}_multiselect_modal");
