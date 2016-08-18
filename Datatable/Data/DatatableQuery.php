@@ -751,7 +751,7 @@ class DatatableQuery
      * @return Response
      * @throws Exception
      */
-    public function getResponse($buildQuery = true)
+    public function getResponse($buildQuery = true,$paginateOptions = null)
     {
         false === $buildQuery ? : $this->buildQuery();
         dump($this->execute()->getSql());
@@ -759,11 +759,13 @@ class DatatableQuery
 
         $fresults = $this->paginator->paginate(
             $this->execute(),
-            1,
-            10,
-            array('distinct' => false)
+            $this->requestParams['start'],
+            $this->requestParams['length'],
+            array(
+                'distinct' => false,
+                'wrap-queries'=>true)
         );
-        /*
+
         //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
 
@@ -794,8 +796,8 @@ class DatatableQuery
         $fullOutput = $this->applyResponseCallbacks($fullOutput);
 
         $json = $this->serializer->serialize($fullOutput, 'json');
-        */
-        $response = new Response([]);
+
+        $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
