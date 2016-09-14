@@ -759,14 +759,16 @@ class DatatableQuery
             dump('use_knp_paginator : true');
             dump($this->requestParams);
             $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
+            $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
             dump('$useWrapQueries : '.$useWrapQueries);
             $fresults = $this->paginator->paginate(
                 $this->execute(),
-                $this->requestParams['draw'],
+                $page,
                 $this->requestParams['length'],
                 array(
                     'distinct' => true,
-                    'wrap-queries' =>boolval($useWrapQueries))
+                    'wrap-queries' => boolval($useWrapQueries),
+                )
             );
 
             //dump($this->rootEntityIdentifier);
