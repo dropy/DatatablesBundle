@@ -753,18 +753,41 @@ class DatatableQuery
      */
     public function getResponse($buildQuery = true,$paginateOptions = null)
     {
-        false === $buildQuery ? : $this->buildQuery();
-        dump($this->execute()->getSql());
-        //$fresults = new Paginator($this->execute(), true);
+        false === $buildQuery ?: $this->buildQuery();
 
-        $fresults = $this->paginator->paginate(
-            $this->execute(),
-            $this->requestParams['start'],
-            $this->requestParams['length'],
-            array(
-                'distinct' => false,
-                'wrap-queries'=>true)
-        );
+        if ($paginateOptions['use_knp_paginator']==true) { // Use KNP PAGINATOR AND WRAP QUERY
+            dump('use_knp_paginator : true');
+            dump($this->requestParams);
+            $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
+            dump('$useWrapQueries : '.$useWrapQueries);
+            $fresults = $this->paginator->paginate(
+                $this->execute(),
+                $this->requestParams['draw'],
+                $this->requestParams['length'],
+                array(
+                    'distinct' => true,
+                    'wrap-queries' =>boolval($useWrapQueries))
+            );
+
+            //dump($this->rootEntityIdentifier);
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
+                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+            );
+
+        }else{ // Don't use KNP PAGNIATOR
+            $fresults = new Paginator($this->execute(), true);
+            $fresults->setUseOutputWalkers(false);
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
+                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+            );
+
+        }
 
         //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
@@ -786,17 +809,14 @@ class DatatableQuery
             $output['data'][] = $item;
         }
 
-        $outputHeader = array(
-            'draw' => (int) $this->requestParams['draw'],
-            'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-            'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
-        );
+
+
 
         $fullOutput = array_merge($outputHeader, $output);
         $fullOutput = $this->applyResponseCallbacks($fullOutput);
 
-        $json = $this->serializer->serialize($fullOutput, 'json');
 
+        $json = $this->serializer->serialize($fullOutput, 'json');
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
 
