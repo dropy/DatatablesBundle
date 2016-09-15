@@ -756,11 +756,8 @@ class DatatableQuery
         false === $buildQuery ?: $this->buildQuery();
 
         if ($paginateOptions['use_knp_paginator']==true) { // Use KNP PAGINATOR AND WRAP QUERY
-            dump('use_knp_paginator : true');
-            dump($this->requestParams);
             $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
             $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
-            dump('$useWrapQueries : '.$useWrapQueries);
             $fresults = $this->paginator->paginate(
                 $this->execute(),
                 $page,
