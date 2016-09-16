@@ -40,6 +40,11 @@ class DatatableQuery
     private $serializer;
 
     /**
+     * @var Serializer
+     */
+    private $paginator;
+
+    /**
      * @var array
      */
     private $requestParams;
@@ -180,7 +185,8 @@ class DatatableQuery
         Twig_Environment $twig,
         $imagineBundle,
         $doctrineExtensions,
-        $locale
+        $locale,
+        $paginator
     )
     {
         $this->serializer = $serializer;
@@ -211,6 +217,7 @@ class DatatableQuery
         $this->doctrineExtensions = $doctrineExtensions;
         $this->locale = $locale;
         $this->isPostgreSQLConnection = false;
+        $this->paginator = $paginator;
 
         $this->setLineFormatter();
         $this->setupColumnArrays();
@@ -744,12 +751,44 @@ class DatatableQuery
      * @return Response
      * @throws Exception
      */
-    public function getResponse($buildQuery = true)
+    public function getResponse($buildQuery = true,$paginateOptions = null)
     {
-        false === $buildQuery ? : $this->buildQuery();
+        false === $buildQuery ?: $this->buildQuery();
 
-        $fresults = new Paginator($this->execute(), true);
-        $fresults->setUseOutputWalkers(false);
+        if ($paginateOptions['use_knp_paginator']==true) { // Use KNP PAGINATOR AND WRAP QUERY
+            $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
+            $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
+            $fresults = $this->paginator->paginate(
+                $this->execute(),
+                $page,
+                $this->requestParams['length'],
+                array(
+                    'distinct' => true,
+                    'wrap-queries' => boolval($useWrapQueries),
+                )
+            );
+
+            //dump($this->rootEntityIdentifier);
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
+                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+            );
+
+        }else{ // Don't use KNP PAGNIATOR
+            $fresults = new Paginator($this->execute(), true);
+            $fresults->setUseOutputWalkers(false);
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
+                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+            );
+
+        }
+
+        //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
 
         foreach ($fresults as $item) {
@@ -761,7 +800,6 @@ class DatatableQuery
             foreach ($this->columns as $column) {
                 $column->renderContent($item, $this);
 
-                /** @var ActionColumn $column */
                 if ('action' === $column->getAlias()) {
                     $column->checkVisibility($item);
                 }
@@ -770,14 +808,12 @@ class DatatableQuery
             $output['data'][] = $item;
         }
 
-        $outputHeader = array(
-            'draw' => (int) $this->requestParams['draw'],
-            'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-            'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
-        );
+
+
 
         $fullOutput = array_merge($outputHeader, $output);
         $fullOutput = $this->applyResponseCallbacks($fullOutput);
+
 
         $json = $this->serializer->serialize($fullOutput, 'json');
         $response = new Response($json);
