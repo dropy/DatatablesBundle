@@ -74,6 +74,10 @@
                         })
                         .on('init.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig" with {'selector': view_table_id} %}
+                            $("div.dropyToolbar").html('<i id="filterRefresh" class="btn red btn-md fa fa-refresh" aria-hidden="true">Filtres</i>');
+                            $("i#filterRefresh").bind('click', function(e){
+                                oTable.draw();
+                            });
                         })
                         {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
                         {% if view_features.extensions.responsive is defined %}
@@ -140,7 +144,28 @@
                 {% include "SgDatatablesBundle:Action:multiselect_actions.html.twig" with {'column': view_multiselect_column} %}
             {% endif %}
 
+
+            $(selector +" thead td input").unbind();
+            $(selector +"_filter input").unbind();
+            $(selector +" thead td input").bind('keyup', function(e) {
+                oTable
+                        .column($(e.currentTarget).data('filter-property-id'))
+                        .search(this.value);
+                if(e.keyCode == 13) {
+                    oTable.draw();
+                }
+            });
+            $(selector +"_filter input").bind('keyup', function(e) {
+                oTable.search(this.value);
+                if(e.keyCode == 13) {
+                    oTable
+                            .draw();
+                }
+            });
         }, features.delay);
+
+
+
     });
 
 </script>

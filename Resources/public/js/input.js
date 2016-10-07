@@ -22,6 +22,8 @@
  */
 
 (function ($) {
+
+    //DISABLE EACH KEY PRESS FOR
     function calcDisableClasses(oSettings) {
         var start = oSettings._iDisplayStart;
         var length = oSettings._iDisplayLength;
@@ -145,6 +147,10 @@
                 nInput.value = '';
             });
 
+            $(nInput).focusout(function(e){
+                fnCallbackDraw(oSettings);
+            });
+
             $(nInput).keyup(function (e) {
                 // 38 = up arrow, 39 = right arrow
                 if (e.which === 38 || e.which === 39) {
@@ -157,7 +163,7 @@
                 }
 
                 if (e.which === 13) {
-                    fnCallbackDraw(oSettings);
+                    //fnCallbackDraw(oSettings);
                     $(':focus').blur();
                 }
 
@@ -179,7 +185,7 @@
                 }
 
                 oSettings._iDisplayStart = iNewStart;
-                fnCallbackDraw(oSettings);
+                //fnCallbackDraw(oSettings);
             });
 
             // Take the brutal approach to cancelling text selection.
