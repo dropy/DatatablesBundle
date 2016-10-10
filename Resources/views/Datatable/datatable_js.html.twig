@@ -74,8 +74,9 @@
                         })
                         .on('init.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig" with {'selector': view_table_id} %}
-                            $("div.dropyToolbar").html('<i id="filterRefresh" class="btn red btn-md fa fa-refresh" aria-hidden="true">Filtres</i>');
-                            $("i#filterRefresh").bind('click', function(e){
+                            $("div.dropyToolbar").html('<a id="filterRefresh" href="" class= "btn red btn-md" ><i  class="fa fa-refresh"></i> Filtres<a>');
+                            $("a#filterRefresh").bind('click', function(e){
+                                e.preventDefault();
                                 oTable.draw();
                             });
                         })
