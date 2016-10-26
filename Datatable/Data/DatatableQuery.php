@@ -565,6 +565,9 @@ class DatatableQuery
                     }
 
                     $orExpr->add($qb->expr()->like($searchField, '?' . $key));
+                    if($column->getAlias() === "datetime"){
+                        $globalSearch = date( "Y-m-d", strtotime(str_replace('/', '-',$globalSearch)));
+                    }
                     $qb->setParameter($key, '%' . $globalSearch . '%');
                 }
             }
@@ -587,6 +590,9 @@ class DatatableQuery
                     if ('' != $searchValue && 'null' != $searchValue) {
                         if (true === $this->isPostgreSQLConnection) {
                             $searchField = $this->cast($searchField, $column);
+                        }
+                        if($column->getAlias() === "datetime"){
+                            $searchValue = date( "Y-m-d", strtotime(str_replace('/', '-',$searchValue)));
                         }
 
                         $andExpr = $filter->addAndExpression($andExpr, $qb, $searchField, $searchValue, $i);
