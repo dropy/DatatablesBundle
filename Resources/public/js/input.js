@@ -208,8 +208,12 @@
             var iPages = calcPages(oSettings);
             var iCurrentPage = calcCurrentPage(oSettings);
 
-            var displayInput = document.getElementsByClassName('paginate_input')[0];
-                displayInput.placeholder = "Page "+iCurrentPage+ " sur " +iPages;
+            var displayInput = document.getElementsByClassName('paginate_input');
+            for(var i = 0; i < displayInput.length; i++)
+            {
+                displayInput[i].placeholder = "Page "+iCurrentPage+ " sur " +iPages;
+            }
+
 
             var an = oSettings.aanFeatures.p;
             if (iPages <= 1) // hide paging when we can't page
