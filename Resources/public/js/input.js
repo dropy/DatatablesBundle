@@ -22,7 +22,6 @@
  */
 
 (function ($) {
-
     //DISABLE EACH KEY PRESS FOR
     function calcDisableClasses(oSettings) {
         var start = oSettings._iDisplayStart;
@@ -65,6 +64,7 @@
 
     $.fn.dataTableExt.oPagination.input = {
         'fnInit': function (oSettings, nPaging, fnCallbackDraw) {
+
             var paginationContainer = document.createElement('ul');
             var nFirst = document.createElement('li');
             var nPrevious = document.createElement('li');
