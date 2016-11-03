@@ -995,4 +995,8 @@ class DatatableQuery
     {
         return $this->imagineBundle;
     }
+    
+    public function checkPostgreSQLConnection(){
+        return $this->isPostgreSQLConnection;
+    }
 }
