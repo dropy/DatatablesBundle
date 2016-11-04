@@ -112,7 +112,7 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                     modal.modal();
 
                 }else
-                    oTable.draw();
+                    oTable.draw('page');
                 if(msg && msg.message){
                     alert(msg.message);
                 }
@@ -154,7 +154,8 @@ $(".modal-form").on('submit', function(event) {
         success: function(msg) {
             if(typeof msg == 'string' && msg.toLowerCase() == 'success'){
                 //check if the action must display a modal before validating
-                oTable.draw();
+
+                oTable.draw('page');
                 var modal = $("#{{ view_table_id }}_multiselect_modal");
                 modal.modal('toggle');
             }

@@ -194,7 +194,8 @@ class Options extends AbstractViewOptions
         $resolver->setDefaults(array(
             'display_start' => 0,
             'defer_loading' => -1,
-            'dom' => 'l"<"dropyToolbar">"firtip',
+            'dom' => 'l"<"dropyToolbar">"f<"datatableOptionLine"ipr>tip',
+            //'dom' => 'l"<"dropyToolbar">"<"datatableOptionLine"f><ipr>tip',
             'fix_multiselect' => true,
             'length_menu' => array(10, 25, 50, 100),
             'order_classes' => true,
