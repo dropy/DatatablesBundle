@@ -761,6 +761,15 @@ class DatatableQuery
     {
         false === $buildQuery ?: $this->buildQuery();
 
+        $customTotalResults = $this->datatableView->getOptions()->getCustomTotalResults();
+
+        $recordsTotal = (int) $this->getCountAllResults($this->rootEntityIdentifier);
+        $recordsFiltered = (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery);
+        if($customTotalResults){
+            $recordsTotal = $customTotalResults;
+            $recordsFiltered = ($customTotalResults < $recordsFiltered) ? $customTotalResults : $recordsFiltered;
+        }
+
         if ($paginateOptions['use_knp_paginator']==true) { // Use KNP PAGINATOR AND WRAP QUERY
             $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
             $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
@@ -778,8 +787,8 @@ class DatatableQuery
 
             $outputHeader = array(
                 'draw' => (int) $this->requestParams['draw'],
-                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+                'recordsTotal' => (int) $recordsTotal,
+                'recordsFiltered' => (int) $recordsFiltered
             );
 
         }else{ // Don't use KNP PAGNIATOR
@@ -788,8 +797,8 @@ class DatatableQuery
 
             $outputHeader = array(
                 'draw' => (int) $this->requestParams['draw'],
-                'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-                'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
+                'recordsTotal' => (int) $recordsTotal,
+                'recordsFiltered' => (int) $recordsFiltered
             );
 
         }

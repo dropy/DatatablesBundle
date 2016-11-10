@@ -49,6 +49,13 @@ class Options extends AbstractViewOptions
     protected $lengthMenu;
 
     /**
+     * Set custom total records numbers
+     *
+     * @var integer, function
+     */
+    protected $customTotalResults;
+
+    /**
      * Highlight the columns being ordered in the table's body.
      *
      * @var boolean
@@ -203,6 +210,7 @@ class Options extends AbstractViewOptions
             'order_multi' => true,
             'page_length' => 10,
             'paging_type' => Style::INPUT_NUMBER_PAGINATION,
+            'custom_total_results' => null,
             'renderer' => '',
             'scroll_collapse' => false,
             'search_delay' => 0,
@@ -225,6 +233,7 @@ class Options extends AbstractViewOptions
         $resolver->setAllowedTypes('order_multi', 'bool');
         $resolver->setAllowedTypes('page_length', 'int');
         $resolver->setAllowedTypes('paging_type', 'string');
+        $resolver->setAllowedTypes('custom_total_results', array('int', 'null' , 'function'));
         $resolver->setAllowedTypes('renderer', 'string');
         $resolver->setAllowedTypes('scroll_collapse', 'bool');
         $resolver->setAllowedTypes('search_delay', 'int');
@@ -446,6 +455,30 @@ class Options extends AbstractViewOptions
     public function getPageLength()
     {
         return (integer) $this->pageLength;
+    }
+
+    /**
+     * Set customTotalResults
+     *
+     * @param int, function $customTotalResults
+     *
+     * @return $this
+     */
+    protected function setCustomTotalResults($value)
+    {
+        $this->customTotalResults = (integer) $value;
+
+        return $this;
+    }
+
+    /**
+     * Get PageLength.
+     *
+     * @return int
+     */
+    public function getCustomTotalResults()
+    {
+        return (integer) $this->customTotalResults;
     }
 
     /**
