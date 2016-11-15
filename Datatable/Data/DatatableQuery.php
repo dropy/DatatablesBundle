@@ -255,7 +255,7 @@ class DatatableQuery
      */
     private function cast($searchField, AbstractColumn $column)
     {
-        if ('datetime' === $column->getAlias() || 'boolean' === $column->getAlias() || 'column' === $column->getAlias()) {
+        if ('datetime' === $column->getAlias() || 'boolean' === $column->getAlias() || 'column' === $column->getAlias() || 'array' === $column->getAlias() ) {
             return 'LOWER(CAST('.$searchField.' AS text))';
         }
 
