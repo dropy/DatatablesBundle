@@ -132,7 +132,7 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
         switch ($this->getSearchType()) {
             case 'like':
                 $andExpr->add($pivot->expr()->like($searchField, '?' . $i));
-                $pivot->setParameter($i, '%' . $searchValue . '%');
+                $pivot->setParameter($i, '%' . mb_strtolower($searchValue, 'UTF-8') . '%');
                 break;
             case 'notLike':
                 $andExpr->add($pivot->expr()->notLike($searchField, '?' . $i));
