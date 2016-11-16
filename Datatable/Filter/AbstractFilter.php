@@ -140,7 +140,7 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
                 break;
             case 'eq':
                 $andExpr->add($pivot->expr()->eq($searchField, '?' . $i));
-                $pivot->setParameter($i, $searchValue);
+                $pivot->setParameter($i, mb_strtolower($searchValue, 'UTF-8'));
                 break;
             case 'neq':
                 $andExpr->add($pivot->expr()->neq($searchField, '?' . $i));
