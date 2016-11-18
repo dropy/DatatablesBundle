@@ -64,6 +64,11 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
      */
     protected $cancelButton;
 
+    /**
+     * @var string
+     */
+    protected  $paramCallback;
+
     //-------------------------------------------------
     // Ctor.
     //-------------------------------------------------
@@ -129,6 +134,15 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
      */
     protected function getAndExpression(Andx $andExpr, QueryBuilder $pivot, $searchField, $searchValue, $i)
     {
+        $paramCallback = $this->getSearchParamCallback();
+
+        if($paramCallback !== ''){
+            $paramCallback ='\Dropy\CatalogBundle\Services\Manager\\';
+            $function = 'getChildrenByCategorieName';
+            $class = new $paramCallback();
+            $searchValue = $class::$function($searchValue);
+        }
+
         switch ($this->getSearchType()) {
             case 'like':
                 $andExpr->add($pivot->expr()->like($searchField, '?' . $i));
@@ -313,5 +327,17 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
         $this->cancelButton = $cancelButton;
 
         return $this;
+    }
+
+    public function setSearchParamCallback($paramCallBack)
+    {
+        $this->paramCallback = $paramCallBack;
+
+        return $this;
+    }
+
+    public function getSearchParamCallback()
+    {
+        return $this->paramCallback;
     }
 }

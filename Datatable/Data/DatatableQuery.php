@@ -594,8 +594,8 @@ class DatatableQuery
                         if($column->getAlias() === "datetime"){
                             $searchValue = date( "Y-m-d", strtotime(str_replace('/', '-',$searchValue)));
                         }
-
                         $andExpr = $filter->addAndExpression($andExpr, $qb, $searchField, $searchValue, $i);
+
                     }
                 }
             }

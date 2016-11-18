@@ -67,7 +67,8 @@ class TextFilter extends AbstractFilter
             'property' => '',
             'search_column' => '',
             'class' => '',
-            'cancel_button' => false
+            'cancel_button' => false,
+            'searchParam_callback' => ''
         ));
 
         $resolver->setAllowedTypes('search_type', 'string');
@@ -75,6 +76,7 @@ class TextFilter extends AbstractFilter
         $resolver->setAllowedTypes('search_column', 'string');
         $resolver->setAllowedTypes('class', 'string');
         $resolver->setAllowedTypes('cancel_button', 'bool');
+        $resolver->setAllowedTypes('searchParam_callback', 'string');
 
         $resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
 
