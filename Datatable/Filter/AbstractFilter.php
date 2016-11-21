@@ -136,12 +136,8 @@ abstract class AbstractFilter implements FilterInterface, OptionsInterface
     {
         $paramCallback = $this->getSearchParamCallback();
 
-        if($paramCallback !== ''){
-            $paramCallback ='\Dropy\CatalogBundle\Services\Manager\\';
-            $function = 'getChildrenByCategorieName';
-            $class = new $paramCallback();
-            $searchValue = $class::$function($searchValue);
-        }
+        if($paramCallback && is_callable($paramCallback) && $searchValue !== '')
+            $searchValue = $paramCallback($searchValue);
 
         switch ($this->getSearchType()) {
             case 'like':
