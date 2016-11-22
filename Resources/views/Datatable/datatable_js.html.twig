@@ -80,7 +80,7 @@
 
                             $("a#filterRefresh").bind('click', function(e){
                                 e.preventDefault();
-                                oTable.draw('page');
+                                oTable.draw();
                             });
                         })
                         {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
@@ -125,7 +125,7 @@
                         oTable
                                 .column($(event.currentTarget).data('filter-property-id'))
                                 .search(this.value)
-                                .draw('page');
+                                .draw();
                     },
                     options.searchDelay
                 );
@@ -139,7 +139,7 @@
                     oTable
                         .column(searchFieldId)
                         .search(searchValue)
-                        .draw('page');
+                        .draw();
                 });
 
             {% endif %}
@@ -156,14 +156,14 @@
                         .column($(e.currentTarget).data('filter-property-id'))
                         .search(this.value);
                 if(e.keyCode == 13) {
-                    oTable.draw('page');
+                    oTable.draw();
                 }
             });
             $(selector +"_filter input").bind('keyup', function(e) {
                 oTable.search(this.value);
                 if(e.keyCode == 13) {
                     oTable
-                            .draw('page');
+                            .draw();
                 }
             });
         }, features.delay);
