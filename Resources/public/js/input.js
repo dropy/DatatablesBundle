@@ -211,6 +211,7 @@
             var displayInput = document.getElementsByClassName('paginate_input');
             for(var i = 0; i < displayInput.length; i++)
             {
+                displayInput[i].value = "";
                 displayInput[i].placeholder = "Page "+iCurrentPage+ " sur " +iPages;
             }
 
@@ -251,7 +252,7 @@
 
             // Current page numer input value
             //$(an).children('.' + paginateInputClassName).val(iCurrentPage);
-            displayInput.value = displayInput.placeholder;
+            //displayInput.value = displayInput.placeholder;
         }
     };
 })(jQuery);
