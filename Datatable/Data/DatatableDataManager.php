@@ -155,12 +155,25 @@ class DatatableDataManager
     }
 
     /**
+         * Generate the view used to display the form into the multiselect modal
+         * @param AbstractType $formType
+         */
+    public function getMultiselectModalFormView($formType){
+            return $this->twig->render(
+                'SgDatatablesBundle:Action:form_modal.html.twig',
+                array(
+                    'modal_form'=>$formType->createView()
+                )
+            );
+    }
+
+    /**
      * Generate the view used to display the form into the multiselect modal
      * @param AbstractType $formType
      */
-    public function getMultiselectModalFormView($formType){
+    public function getCustomMultiselectModalFormView($layout, $formType){
         return $this->twig->render(
-            'SgDatatablesBundle:Action:form_modal.html.twig',
+            $layout,
             array(
                 'modal_form'=>$formType->createView()
             )

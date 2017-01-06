@@ -118,6 +118,9 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if(msg && msg.message){
+                    alert(msg.message);
+                }
                 console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
             }
         })
