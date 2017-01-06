@@ -1,4 +1,4 @@
-    $(document).ready(function () {
+$(document).ready(function () {
 
     var detailRows = [];
 
@@ -10,7 +10,7 @@
         var url = $('i', $(this)).data('content_route');
         var ptable = $(this).closest('table').DataTable();
         var row = ptable.row(tr);
-        console.log(row);
+
         var rid =  row.id();
         console.log(rid);
         var idx = $.inArray( rid , detailRows );
@@ -23,26 +23,26 @@
         } else {
             tr.addClass('details');
             $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function(d){ //this is specific to my application since I'm adding a child table.
-            row.child(d.html).show();
-            $('#' + d.json.id).DataTable();
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(d){ //this is specific to my application since I'm adding a child table.
+                    row.child(d.html).show();
+                    $('#' + d.json.id).DataTable();
+                }
+            });
+            // Add to the 'open' array
+            if ( idx === -1 ) {
+                detailRows.push( rid );
+            }
+            console.log(detailRows);
         }
-    });
-    // Add to the 'open' array
-    if ( idx === -1 ) {
-    detailRows.push( rid );
-}
-    console.log(detailRows);
-}
     return ptable;
 });
 
     dt.on('draw', function(){
-    $.each(detailRows, function(i,id){
-    $('#' + id+ ' td.details-control').trigger('click');
-});
-});
+        $.each(detailRows, function(i,id){
+            $('#' + id+ ' td.details-control').trigger('click');
+        });
+    });
 });
