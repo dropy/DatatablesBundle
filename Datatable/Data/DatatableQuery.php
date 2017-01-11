@@ -798,6 +798,7 @@ class DatatableQuery
             $recordsFiltered = ($customTotalResults < $recordsFiltered) ? $customTotalResults : $recordsFiltered;
         }
 
+
         if ($paginateOptions['use_knp_paginator'] == true) { // Use KNP PAGINATOR AND WRAP QUERY
                 $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
                 $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
@@ -819,7 +820,11 @@ class DatatableQuery
 
         }else{ // Don't use KNP PAGNIATOR
             $fresults = new Paginator($this->execute(), true);
-            $fresults->setUseOutputWalkers(false);
+            $useOutputWalker = false;
+            if ($paginateOptions['use_output_walker']==true)
+                $useOutputWalker = true;
+            
+            $fresults->setUseOutputWalkers($useOutputWalker);
 
             $outputHeader = array(
                 'draw' => (int) $this->requestParams['draw'],
