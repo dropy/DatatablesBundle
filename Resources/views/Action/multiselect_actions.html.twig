@@ -118,9 +118,14 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
+                if(XMLHttpRequest.responseText ){
+                    var msg =  JSON.parse(XMLHttpRequest.responseText);
+                    if(msg && msg.message){
+                        alert("Erreur : " + msg.message);
+                    }
+                }
 
-                alert("Erreur : Une erreur est survenue lors de l'édition ");
-                console.log("Erreur : "+textStatus);
 
 
             }
