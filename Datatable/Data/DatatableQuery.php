@@ -682,7 +682,7 @@ class DatatableQuery
      *
      * @return int
      */
-    private function getCountFilteredResults($rootEntityIdentifier, $buildQuery = true)
+    private function getCountFilteredResults($rootEntityIdentifier, $buildQuery = true, $totalItemsFiltered = null)
     {
         if (true === $buildQuery) {
             $qb = $this->em->createQueryBuilder();
@@ -693,7 +693,11 @@ class DatatableQuery
             $this->setWhere($qb);
             $this->setWhereAllCallback($qb);
 
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            if($totalItemsFiltered == null || $this->requestParams['search']['value'] || count($qb->getParameters())){
+                $totalItemsFiltered = (int) $qb->getQuery()->getSingleScalarResult();
+            }
+
+            return $totalItemsFiltered;
         } else {
             $this
                 ->qb
@@ -745,6 +749,29 @@ class DatatableQuery
         return $query;
     }
 
+    /**
+     * Add Hints into a KNP Query instance.
+     *
+     * @return Query
+     * @throws Exception
+     */
+    private function addTotalCount($totalItems)
+    {
+        $query = $this->execute();
+        if (true === $this->configs['translation_query_hints']) {
+            if (true === $this->doctrineExtensions) {
+                $query->setHint(
+                    'knp_paginator.count',
+                    $totalItems
+                );
+            } else {
+                throw new Exception('execute(): "DoctrineExtensions" does not exist.');
+            }
+        }
+        return $query;
+    }
+
+
     //-------------------------------------------------
     // Response
     //-------------------------------------------------
@@ -764,26 +791,25 @@ class DatatableQuery
         $customTotalResults = $this->datatableView->getOptions()->getCustomTotalResults();
 
         $recordsTotal = (int) $this->getCountAllResults($this->rootEntityIdentifier);
-        $recordsFiltered = (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery);
+        $recordsFiltered = (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery, $recordsTotal);
+
         if($customTotalResults){
             $recordsTotal = $customTotalResults;
             $recordsFiltered = ($customTotalResults < $recordsFiltered) ? $customTotalResults : $recordsFiltered;
         }
 
-        if ($paginateOptions['use_knp_paginator']==true) { // Use KNP PAGINATOR AND WRAP QUERY
-            $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
-            $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
-            $fresults = $this->paginator->paginate(
-                $this->execute(),
-                $page,
-                $this->requestParams['length'],
-                array(
-                    'distinct' => true,
-                    'wrap-queries' => boolval($useWrapQueries),
-                )
-            );
-
-            //dump($this->rootEntityIdentifier);
+        if ($paginateOptions['use_knp_paginator'] == true) { // Use KNP PAGINATOR AND WRAP QUERY
+                $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
+                $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
+                $fresults = $this->paginator->paginate(
+                    $this->addTotalCount($recordsTotal),
+                    $page,
+                    $this->requestParams['length'],
+                    array(
+                        'distinct' => true,
+                        'wrap-queries' => boolval($useWrapQueries),
+                    )
+                );
 
             $outputHeader = array(
                 'draw' => (int) $this->requestParams['draw'],
