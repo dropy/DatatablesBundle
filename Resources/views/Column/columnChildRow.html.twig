@@ -1,0 +1,21 @@
+{
+'name': "{{ column.name }}",
+'orderable': false,
+'searchable': false,
+'visible': true,
+'className': "{{ column.class }}",
+'data': "{{ column.data }}"
+{%- if column.ajax is defined -%}
+    ,
+    'render': function( data, type, row ){
+    var routeArgs = {};
+    {% if column.ajax.args is defined and column.ajax.args is iterable %}
+        var xargs = JSON.parse('{{ column.ajax.args|json_encode|e('js') }}');
+        $.each(xargs, function( arg, col) {
+        routeArgs[arg] = row[col];
+        });
+    {% endif %}
+    return '<i data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>'
+    }
+{%- endif -%}
+},
