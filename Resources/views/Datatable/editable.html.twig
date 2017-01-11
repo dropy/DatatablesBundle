@@ -17,7 +17,6 @@
             {% else %}
                 var edit_url = "{{ path('sg_datatables_edit') }}"
             {% endif %}
-
             $(str).editable({
                 {# datetime column #}
                 {% if 'datetime' == column.alias %}
