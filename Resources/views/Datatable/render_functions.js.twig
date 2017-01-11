@@ -80,12 +80,15 @@ function render_progress_bar(data, type, row, meta, barClasses, min, max, label,
     return result;
 }
 
-function render_editable_text(data, type, row, meta, colData) {
+function render_editable_text(data, type, row, meta, colData, title) {
     if (data != null) {
         var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
         var spanClass = "sg-editable-" + str;
         var result = '<span class="' + spanClass + '"';
-        result += 'data-pk="' + row.id + '"data-type="text"' + '>' + data + '</span>';
+        if(title!=null && title.trim()!='')
+            result += 'data-title="' + title + '" ';
+        result += 'data-pk="' + row.id + '" data-type="text"' + '>' + data + '</span>';
 
         return result;
     } else {
@@ -93,11 +96,89 @@ function render_editable_text(data, type, row, meta, colData) {
     }
 }
 
-function render_editable_datetime(data, type, row, meta, colData, dateFormat) {
+function render_editable_number(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+
+        result += 'data-pk="' + row.id + '" data-type="number"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+function render_editable_select(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+
+        result += 'data-pk="' + row.id + '" data-type="select"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+function render_editable_multiselect(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+
+        result += 'data-pk="' + row.id + '" data-type="select2"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+function render_editable_category(data, type, row, meta, colData, title) {
+    if (data != null) {
+        var str = colData.split(".").join("_");
+        str = str.replace(/[\[\], ]+/g,'');
+        var spanClass = "sg-editable-" + str;
+        var result = '<span class="' + spanClass + '"';
+        var values = '';
+        for(var i = 0;i<row.categories.length;i++){
+            values += row.categories[i].id+',' ;
+        }
+        if(title!=null && title.trim()!=''){
+            result += 'data-title="' + title + '" ';
+        }
+        result += 'data-pk="' + row.id + '" data-value="'+values+'" data-type="select2"' + '>' + data + '</span>';
+
+        return result;
+    } else {
+        return null;
+    }
+}
+
+
+function render_editable_datetime(data, type, row, meta, colData, dateFormat, title) {
     if (data != null && typeof data.timestamp != "undefined") {
         moment.locale("{{ app.request.locale }}");
         var spanClass = "sg-editable-" + colData;
         var result = '<span class="' + spanClass + '"';
+            if(title!=null && title.trim()!='')
+                result += 'data-title="' + title + '" ';
             result += 'data-pk="' + row.id + '"data-type="combodate"' + '>';
             result += moment.unix(data.timestamp).format(dateFormat);
             result += '</span>';
@@ -108,7 +189,7 @@ function render_editable_datetime(data, type, row, meta, colData, dateFormat) {
     }
 }
 
-function render_editable_boolean(data, type, row, meta, colData, trueLabel, falseLabel) {
+function render_editable_boolean(data, type, row, meta, colData, trueLabel, falseLabel, title) {
     if ("" == trueLabel) {
         trueLabel = "true";
     }
@@ -119,6 +200,8 @@ function render_editable_boolean(data, type, row, meta, colData, trueLabel, fals
 
     var spanClass = "sg-editable-" + colData;
     var result = '<span class="' + spanClass + '"';
+        if(title!=null && title.trim()!='')
+            result += 'data-title="' + title + '" ';
         result += 'data-pk="' + row.id + '"data-type="select"' + 'data-value="' + data + '"' + '>';
 
     if (data == true) {

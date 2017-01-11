@@ -1,3 +1,6 @@
+<script src="{{ asset('bundles/sgdatatables/js/input.js') }}"></script>
+<!--<script src="{{ asset('bundles/sgdatatables/js/childRowColumn.js') }}"></script>-->
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -70,6 +73,17 @@
                         .on('draw.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
                         })
+                        .on('init.dt', function() {
+                            {% include "SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig" with {'selector': view_table_id} %}
+
+                            $("div.dropyToolbar").html('<a id="filterRefresh" href="" class= "btn red btn-md" ><i  class="fa fa-refresh"></i> Filtres<a>');
+
+
+                            $("a#filterRefresh").bind('click', function(e){
+                                e.preventDefault();
+                                oTable.draw();
+                            });
+                        })
                         {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
                         {% if view_features.extensions.responsive is defined %}
                             {% if true == view_features.extensions.responsive %}
@@ -117,7 +131,7 @@
                     options.searchDelay
                 );
 
-                $(selector + "_wrapper").find("tr input.individual_filtering").on("keyup change", throttledSearch);
+                //$(selector + "_wrapper").find("tr input.individual_filtering").on("keyup change", throttledSearch);
 
                 $(selector + "_wrapper" + " select.individual_filtering").on("keyup change", function(event) {
                     var searchFieldId = $(event.currentTarget).data('filter-property-id');
@@ -135,17 +149,41 @@
                 {% include "SgDatatablesBundle:Action:multiselect_actions.html.twig" with {'column': view_multiselect_column} %}
             {% endif %}
 
+
+            $(selector +" thead td input").unbind();
+            $(selector +"_filter input").unbind();
+            $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup', function(e) {
+                oTable
+                        .column($(e.currentTarget).data('filter-property-id'))
+                        .search(this.value);
+                if(e.keyCode == 13) {
+                    oTable.draw();
+                }
+            });
+            $(selector +"_filter input").bind('keyup', function(e) {
+                oTable.search(this.value);
+                if(e.keyCode == 13) {
+                    oTable
+                            .draw();
+                }
+            });
         }, features.delay);
+
+
+
     });
 
 </script>
 
+
 {% block sg_datatable_render_functions %}
 
     <script type="text/javascript">
+
         if (typeof window.renderFunctionsAlreadyLoaded == 'undefined') {
             {% include "SgDatatablesBundle:Datatable:render_functions.js.twig" %}
         }
     </script>
 
 {% endblock %}
+

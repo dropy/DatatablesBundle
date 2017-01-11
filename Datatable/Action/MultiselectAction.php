@@ -27,6 +27,22 @@ class MultiselectAction extends AbstractAction
      */
     protected $tableName;
 
+
+    /**
+     * Display the action into a dropdown list
+     *
+     * @var boolean
+     */
+    protected $dropdown;
+
+    /**
+     * The modal form container.
+     *
+     * @var string
+     */
+    protected $modalFormRoute;
+
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -43,7 +59,9 @@ class MultiselectAction extends AbstractAction
             'icon' => '',
             'label' => '',
             'attributes' => array(),
-            'role' => ''
+            'role' => '',
+            'dropdown'=>false,
+            'modal_form_route'=> '' ,
         ));
 
         $resolver->setAllowedTypes('route', 'string');
@@ -52,8 +70,11 @@ class MultiselectAction extends AbstractAction
         $resolver->setAllowedTypes('label', 'string');
         $resolver->setAllowedTypes('attributes', 'array');
         $resolver->setAllowedTypes('role', 'string');
+        $resolver->setAllowedTypes('dropdown', 'bool');
+        $resolver->setAllowedTypes('modal_form_route','string');
 
         $tableName = $this->tableName;
+
         $resolver->setNormalizer('attributes', function($options, $value) use($tableName) {
             $baseClass = $tableName . '_multiselect_action_click';
             $value['class'] = array_key_exists('class', $value) ? ($value['class'] . ' ' . $baseClass) : $baseClass;
@@ -91,4 +112,40 @@ class MultiselectAction extends AbstractAction
     {
         return $this->tableName;
     }
+
+
+    /**
+     * @return boolean
+     */
+    public function isDropdown()
+    {
+        return $this->dropdown;
+    }
+
+    /**
+     * @param boolean $dropdown
+     */
+    public function setDropdown($dropdown)
+    {
+        $this->dropdown = $dropdown;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModalFormRoute()
+    {
+        return $this->modalFormRoute;
+    }
+
+    /**
+     * @param string $modalFormRoute
+     */
+    public function setModalFormRoute($modalFormRoute)
+    {
+        $this->modalFormRoute = $modalFormRoute;
+    }
+
+
+
 }

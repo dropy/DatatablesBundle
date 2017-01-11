@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the SgDatatablesBundle package.
  *
@@ -8,9 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Sg\DatatablesBundle\Datatable\Action;
-
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Closure;
 
@@ -28,26 +25,24 @@ class Action extends AbstractAction
      */
     protected $renderIf;
 
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
-
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
         $resolver->setDefault('render_if', array());
+
 
         return $this;
     }
-
     //-------------------------------------------------
     // Getters && Setters
     //-------------------------------------------------
-
     /**
      * Set renderIf.
      *
@@ -58,10 +53,8 @@ class Action extends AbstractAction
     public function setRenderIf($renderIf)
     {
         $this->renderIf = $renderIf;
-
         return $this;
     }
-
     /**
      * Get renderIf.
      *
@@ -75,6 +68,7 @@ class Action extends AbstractAction
     //-------------------------------------------------
     // Helper
     //-------------------------------------------------
+
 
     /**
      * Assign array by path.
@@ -118,7 +112,6 @@ class Action extends AbstractAction
 
         foreach ($commonkeys as $key) {
             $res = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
-
             if ($res) {
                 $ret[$key] = $arr1[$key];
             }
@@ -126,7 +119,6 @@ class Action extends AbstractAction
 
         return $ret;
     }
-
     /**
      * Is visible.
      *
@@ -154,13 +146,11 @@ class Action extends AbstractAction
                         $result = ($item == $data[$key]);
                     }
                 }
-
                 return $result;
             } elseif ($this->renderIf instanceof Closure) {
-                    return call_user_func($this->renderIf, $data);
+                return call_user_func($this->renderIf, $data);
             }
         }
-
         return true;
     }
 }

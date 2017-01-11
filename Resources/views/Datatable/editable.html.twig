@@ -8,8 +8,15 @@
         {% endif %}
         {% if true == permission %}
             {% set token = csrf_token('editable') %}
+
             var str = '{{ column.data }}'.split(".").join("_");
+            str = str.replace(/[\[\], ]+/g,'');
             str = 'span.sg-editable-' + str;
+            {% if column.editableRoute is not  empty  %}
+            var edit_url = "{{ path(column.editableRoute) }}";
+            {% else %}
+                var edit_url = "{{ path('sg_datatables_edit') }}"
+            {% endif %}
             $(str).editable({
                 {# datetime column #}
                 {% if 'datetime' == column.alias %}
@@ -20,9 +27,28 @@
                 {% if 'boolean' == column.alias %}
                 source: [{'true': "{{ column.trueLabel ? column.trueLabel : 'true' }}"}, {'false': "{{ column.falseLabel ? column.falseLabel : 'false' }}"}],
                 emptytext: 'false',
+                {% elseif ('select' == column.editableType) or ('multiselect' == column.editableType)  or ('category' == column.editableType) %}
+                source: [
+                    {% for key, value in  column.editableData %}
+                        {
+                        id: {{ key }},
+                        text: {% if value is empty %} '{{ key }}'{% else %}'{{ value }}'{%  endif %}
+                        },
+                    {% endfor %}
+                    ],
+                emptytext: 'Aucune valeur',
+                {% else %}
+                emptytext: 'Aucune valeur',
                 {% endif %}
+                {% if ('multiselect' == column.editableType)  or ('category' == column.editableType) %}
+                select2: {
+                    multiple: true,
+                    width: 200,
+                    },
+                {% endif %}
+                step: 'any',
                 name: '{{ column.data }}',
-                url: "{{ path('sg_datatables_edit') }}",
+                url: edit_url,
                 title: '{{ column.title }} ' + "{{ 'datatables.actions.edit'|trans({}, 'messages') }}",
                 params: function (params) {
                     params.entity = '{{ datatable.entity|e('js') }}';
@@ -35,13 +61,17 @@
                 {# many-to-one associations and the Responsive-extension need a complete table redraw #}
                 {% if column.isAssociation or view_features.extensions.responsive is defined and true == view_features.extensions.responsive %}
                 success: function(response, newValue) {
-                    oTable.draw();
+                    oTable.draw('page');
                     {% if column.isAssociation %}
                         alert("{{ 'editable.tableRedraw'|trans({}, 'messages') }}");
                     {% endif %}
-                }
+                },
                 {% endif %}
+                error: function(response, newValue) {
+                    alert("Erreur : "+response.responseText);
+                },
             });
+
         {% endif %}
     {% endif %}
 {% endfor %}

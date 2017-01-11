@@ -31,6 +31,7 @@ class ActionColumn extends AbstractColumn
      *
      * @var string
      */
+
     protected $startHtml;
 
     /**
@@ -198,10 +199,10 @@ class ActionColumn extends AbstractColumn
     }
 
     /**
-     * Check visibility.
-     *
-     * @param array $entity
-     */
+    +     * Check visibility.
+    +     *
+    +     * @param array $entity
+    +     */
     public function checkVisibility(array &$entity)
     {
         $actionState = array();

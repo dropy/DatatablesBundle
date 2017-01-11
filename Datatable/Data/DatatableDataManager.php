@@ -13,6 +13,7 @@ namespace Sg\DatatablesBundle\Datatable\Data;
 
 use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Serializer;
@@ -38,6 +39,11 @@ class DatatableDataManager
      * @var Serializer
      */
     private $serializer;
+
+    /**
+     * @var Serializer
+     */
+    private $paginator;
 
     /**
      * The Twig Environment service.
@@ -87,7 +93,7 @@ class DatatableDataManager
      * @param array            $configs
      * @param array            $bundles
      */
-    public function __construct(RequestStack $requestStack, Serializer $serializer, Twig_Environment $twig, array $configs, array $bundles)
+    public function __construct(RequestStack $requestStack, Serializer $serializer, Twig_Environment $twig, array $configs,$paginator,  array $bundles)
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->serializer = $serializer;
@@ -104,6 +110,7 @@ class DatatableDataManager
             $this->imagineBundle = true;
         }
 
+        $this->paginator = $paginator;
         $this->locale = $this->request->getLocale();
     }
 
@@ -140,9 +147,36 @@ class DatatableDataManager
             $this->twig,
             $this->imagineBundle,
             $this->doctrineExtensions,
-            $this->locale
+            $this->locale,
+            $this->paginator
         );
 
         return $query;
+    }
+
+    /**
+         * Generate the view used to display the form into the multiselect modal
+         * @param AbstractType $formType
+         */
+    public function getMultiselectModalFormView($formType){
+            return $this->twig->render(
+                'SgDatatablesBundle:Action:form_modal.html.twig',
+                array(
+                    'modal_form'=>$formType->createView()
+                )
+            );
+    }
+
+    /**
+     * Generate the view used to display the form into the multiselect modal
+     * @param AbstractType $formType
+     */
+    public function getCustomMultiselectModalFormView($layout, $formType){
+        return $this->twig->render(
+            $layout,
+            array(
+                'modal_form'=>$formType->createView()
+            )
+        );
     }
 }

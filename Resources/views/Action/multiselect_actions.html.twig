@@ -9,19 +9,57 @@
 {% set visible = false %}
 
 {% set multiple_actions %}
-    <div>
+{% if view_options.fixMultiselect %}
+    <div class="multiselect-action-fixed" >
+        <div class="multiselect-action-input-fixed">
+{% else %}
+     <div class="multiselect-action" >
+         <div class="multiselect-action-input">
+ {% endif %}
+     {% set buttonActions = '' %}
+     {% set dropDownActions = '' %}
         {% for action in column.actions %}
+
             {% set visible = (action.role and app.user is not null and is_granted(action.role) or not action.role) ? true : false %}
+
 
             {% if visible %}
                 {% set route = action.route ? path(action.route, action.routeParameters) : '' %}
+                {% set route = action.modalFormRoute ? path(action.modalFormRoute,  action.routeParameters) : route %}
                 {% set attributes %}
                     {% for key, value in action.attributes %} {{ key }}='{{ value }}'{% endfor %}
                 {% endset %}
-                <a href="{{ route }}" {{ attributes }}>{{ datatable_icon(action.icon, action.label) }}</a>
+
+                {%  set link  %}
+                    <a href="{{ route }}" {{ attributes }} {% if action.modalFormRoute != '' %} data-use-modal="true" {% endif %}>{{ datatable_icon(action.icon, action.label) }}</a>
+                {% endset %}
+
+                {% if action.dropdown %}
+                    {% set dropDownActions %}
+                        {{ dropDownActions }}<li>{{ link }}</li>
+                    {% endset %}
+                {% else %}
+                    {% set buttonActions %}
+                        {{ buttonActions }} {{ link }}
+                    {% endset %}
+                {% endif %}
             {% endif %}
         {% endfor %}
+
+        {% if dropDownActions != '' %}
+            <div class="dropup multiselect-action-dropdown  ">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu ">
+                    {{ dropDownActions }}
+                </ul>
+            </div>
+        {% endif %}
+
+        {{ buttonActions }}
     </div>
+</div>
 {% endset %}
 
 $("#{{ view_table_id }}_multiselect_actions").append("{{ multiple_actions|e('js') }}");
@@ -30,12 +68,13 @@ $(".{{ view_table_id }}_multiselect_checkall").click(function(event) {
     var that = this;
     $("input.{{ view_table_id }}_multiselect_checkbox:checkbox").each(function() {
         this.checked = that.checked;
+        $(this).change();
     });
 });
 
+
 $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
     var length = $("input.{{ view_table_id }}_multiselect_checkbox:checkbox:checked").length;
-
     event.preventDefault();
 
     if (length > 0) {
@@ -43,10 +82,18 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
             return;
         }
 
-        {% set token = csrf_token('multiselect') %}
+        if (
+            $(this).attr("href") == "{{ path('partnerui_add_link_products_seller_ajax') }}"
+        ) {
+            addPoductSellerDatatable(oTable,"{{ path('partnerui_get_selected_products_results_ajax') }}","{{ path('partnerui_add_link_products_seller_ajax') }}","{{ view_table_id }}");
+            return;
+        }
 
+        {% set token = csrf_token('multiselect') %}
+        var href = $(this).attr("href");
+        var useModal = $(this).data("use-modal");
         $.ajax({
-            url: $(this).attr("href"),
+            url: href,
             type: "POST",
             cache: false,
             data: {
@@ -54,13 +101,88 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
                 'token': '{{ token }}'
             },
             success: function(msg) {
-                oTable.draw();
+                //check if the action must display a modal before validating
+                if (
+                    useModal != '' && typeof useModal != 'undefined'
+                ){
+
+                    var modal = $("#{{ view_table_id }}_multiselect_modal");
+                    modal.find(".modal-body").html(msg);
+                    modal.find(".modal-form").attr("action",href);
+                    modal.modal();
+
+                }else
+                    oTable.draw('page');
+                if(msg && msg.message){
+                    alert(msg.message);
+                }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
+                if(XMLHttpRequest.responseText ){
+                    var msg =  JSON.parse(XMLHttpRequest.responseText);
+                    if(msg && msg.message){
+                        alert("Erreur : " + msg.message);
+                    }
+                }
+
+
+
             }
         })
     } else {
         alert("{{ 'datatables.bulk.selectError'|trans({}, 'messages') }}");
     }
 });
+
+$(".modal-form").on('submit', function(event) {
+
+    event.preventDefault();
+
+    {% set token = csrf_token('multiselect') %}
+    var action = $(this).closest("form").attr("action");
+    var formName = $("#form_multiselect_modal").data("form-name");
+    var idArray = $("input:checkbox:checked.{{ view_table_id }}_multiselect_checkbox", oTable.rows().nodes()).serializeArray();
+    var idFormatedArray = [];
+    var i = 0 ;
+    idArray.forEach(function(object) {
+        var newObject = {
+            'name' : 'data['+i+']',
+            'value':object.value
+        };
+        idFormatedArray.push(newObject);
+        i++;
+    },idFormatedArray,i);
+    var data = $(this).serializeArray();
+    data = data.concat(idFormatedArray);
+    $.ajax({
+        url: action,
+        type: 'POST',
+        cache: false,
+        data: data,
+        success: function(msg) {
+            if(typeof msg == 'string' && msg.toLowerCase() == 'success'){
+                //check if the action must display a modal before validating
+
+                oTable.draw('page');
+                var modal = $("#{{ view_table_id }}_multiselect_modal");
+                modal.modal('toggle');
+            }
+            else if(msg && msg.message){
+                alert(msg.message);
+            }
+            else{
+                var modal = $("#{{ view_table_id }}_multiselect_modal");
+                modal.find(".modal-body").html(msg);
+                modal.find(".modal-form").attr("action",href);
+                modal.modal();
+            }
+        },
+
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest + ' ' + textStatus + ' ' +errorThrown);
+        }
+    });
+});
+
+

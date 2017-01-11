@@ -36,11 +36,42 @@ class Column extends AbstractColumn
     protected $editable;
 
     /**
+
+     * Editable optionnal route.
+     *
+     * @var string
+     */
+    protected $editable_route;
+
+
+    /**
+     * Editable optionnal type .
+     *
+     * @var string
+     */
+    protected $editable_type;
+
+    /**
+     * Editable optionnal type .
+     *
+     * @var array
+     */
+    protected $editable_data;
+
+    /**
+     * Editable optionnal title .
+     *
+     * @var string
+     */
+    protected $editable_title;
+
+    /**
      * Role based editing permission.
      *
      * @var null|string
      */
     protected $editableRole;
+
 
     //-------------------------------------------------
     // ColumnInterface
@@ -99,7 +130,14 @@ class Column extends AbstractColumn
             'filter' => array('text', array()),
             'default' => '',
             'editable' => false,
+
+            'editable_route' => '',
+            'editable_type' => '',
+            'editable_data' => array(),
+            'editable_title' => '',
+
             'editable_role' => null
+
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -115,7 +153,18 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('filter', 'array');
         $resolver->setAllowedTypes('default', 'string');
         $resolver->setAllowedTypes('editable', 'bool');
+
+        $resolver->setAllowedTypes('editable_route', 'string');
+        $resolver->setAllowedTypes('editable_type', 'string');
+        $resolver->setAllowedTypes('editable_data','array');
+        $resolver->setAllowedTypes('editable_title', 'string');
+
+        //$resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
+        //$resolver->setAllowedValues('filter_type', array('text', 'select'));
+        $resolver->setAllowedValues('editable_type', array('text', 'number','datetime','select','multiselect','category',''));
+
         $resolver->setAllowedTypes('editable_role', array('string', 'null'));
+
 
         return $this;
     }
@@ -173,6 +222,74 @@ class Column extends AbstractColumn
     }
 
     /**
+     *
+     * @return string
+     */
+    public function getEditableRoute()
+    {
+        return $this->editable_route;
+    }
+
+    /**
+     * @param string $editable_route
+     */
+    public function setEditableRoute($editable_route)
+    {
+        $this->editable_route = $editable_route;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditableType()
+    {
+        return $this->editable_type;
+    }
+
+    /**
+     * @param string $editable_type
+     */
+    public function setEditableType($editable_type)
+    {
+        $this->editable_type = $editable_type;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEditableData()
+    {
+        return $this->editable_data;
+    }
+
+    /**
+     * @param array $editable_data
+     */
+    public function setEditableData($editable_data)
+    {
+        $this->editable_data = $editable_data;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getEditableTitle()
+    {
+        return $this->editable_title;
+    }
+
+    /**
+     * @param string $editable_title
+     */
+    public function setEditableTitle($editable_title)
+    {
+        $this->editable_title = $editable_title;
+    }
+
+
+
+    /**
      * Set editable role.
      *
      * @param null|string $editableRole
@@ -195,4 +312,5 @@ class Column extends AbstractColumn
     {
         return $this->editableRole;
     }
+
 }

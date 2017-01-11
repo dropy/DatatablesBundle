@@ -49,6 +49,13 @@ class Options extends AbstractViewOptions
     protected $lengthMenu;
 
     /**
+     * Set custom total records numbers
+     *
+     * @var integer, function
+     */
+    protected $customTotalResults;
+
+    /**
      * Highlight the columns being ordered in the table's body.
      *
      * @var boolean
@@ -158,6 +165,13 @@ class Options extends AbstractViewOptions
      */
     protected $forceDom;
 
+    /**
+     * Set multiselect actions as fixed or not fixed
+     *
+     * @var boolean
+     */
+    protected $fixMultiselect;
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -187,13 +201,16 @@ class Options extends AbstractViewOptions
         $resolver->setDefaults(array(
             'display_start' => 0,
             'defer_loading' => -1,
-            'dom' => 'lfrtip',
+            'dom' => 'l"<"dropyToolbar">"f<"datatableOptionLine"ipr>tip',
+            //'dom' => 'l"<"dropyToolbar">"<"datatableOptionLine"f><ipr>tip',
+            'fix_multiselect' => true,
             'length_menu' => array(10, 25, 50, 100),
             'order_classes' => true,
             'order' => array(array(0, 'asc')),
             'order_multi' => true,
             'page_length' => 10,
-            'paging_type' => Style::FULL_NUMBERS_PAGINATION,
+            'paging_type' => Style::INPUT_NUMBER_PAGINATION,
+            'custom_total_results' => null,
             'renderer' => '',
             'scroll_collapse' => false,
             'search_delay' => 0,
@@ -209,12 +226,14 @@ class Options extends AbstractViewOptions
         $resolver->setAllowedTypes('display_start', 'int');
         $resolver->setAllowedTypes('defer_loading', 'int');
         $resolver->setAllowedTypes('dom', 'string');
+        $resolver->setAllowedTypes('fix_multiselect', 'bool');
         $resolver->setAllowedTypes('length_menu', 'array');
         $resolver->setAllowedTypes('order_classes', 'bool');
         $resolver->setAllowedTypes('order', 'array');
         $resolver->setAllowedTypes('order_multi', 'bool');
         $resolver->setAllowedTypes('page_length', 'int');
         $resolver->setAllowedTypes('paging_type', 'string');
+        $resolver->setAllowedTypes('custom_total_results', array('int', 'null' , 'function'));
         $resolver->setAllowedTypes('renderer', 'string');
         $resolver->setAllowedTypes('scroll_collapse', 'bool');
         $resolver->setAllowedTypes('search_delay', 'int');
@@ -436,6 +455,30 @@ class Options extends AbstractViewOptions
     public function getPageLength()
     {
         return (integer) $this->pageLength;
+    }
+
+    /**
+     * Set customTotalResults
+     *
+     * @param int, function $customTotalResults
+     *
+     * @return $this
+     */
+    protected function setCustomTotalResults($value)
+    {
+        $this->customTotalResults = (integer) $value;
+
+        return $this;
+    }
+
+    /**
+     * Get PageLength.
+     *
+     * @return int
+     */
+    public function getCustomTotalResults()
+    {
+        return (integer) $this->customTotalResults;
     }
 
     /**
@@ -700,5 +743,29 @@ class Options extends AbstractViewOptions
     public function getForceDom()
     {
         return $this->forceDom;
+    }
+
+    /**
+     * Fix multiselect action.
+     *
+     * @param boolean $fixMultiselect
+     *
+     * @return $this
+     */
+    protected function setFixMultiselect($fixMultiselect)
+    {
+        $this->fixMultiselect = $fixMultiselect;
+
+        return $this;
+    }
+
+    /**
+     * Get force dom.
+     *
+     * @return boolean
+     */
+    public function getFixMultiselect()
+    {
+        return $this->fixMultiselect;
     }
 }

@@ -15,6 +15,7 @@ use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -37,6 +38,11 @@ class DatatableQuery
      * @var Serializer
      */
     private $serializer;
+
+    /**
+     * @var Serializer
+     */
+    private $paginator;
 
     /**
      * @var array
@@ -179,7 +185,8 @@ class DatatableQuery
         Twig_Environment $twig,
         $imagineBundle,
         $doctrineExtensions,
-        $locale
+        $locale,
+        $paginator
     )
     {
         $this->serializer = $serializer;
@@ -210,6 +217,7 @@ class DatatableQuery
         $this->doctrineExtensions = $doctrineExtensions;
         $this->locale = $locale;
         $this->isPostgreSQLConnection = false;
+        $this->paginator = $paginator;
 
         $this->setLineFormatter();
         $this->setupColumnArrays();
@@ -247,8 +255,8 @@ class DatatableQuery
      */
     private function cast($searchField, AbstractColumn $column)
     {
-        if ('datetime' === $column->getAlias() || 'boolean' === $column->getAlias() || 'column' === $column->getAlias()) {
-            return 'CAST('.$searchField.' AS text)';
+        if ('datetime' === $column->getAlias() || 'boolean' === $column->getAlias() || 'column' === $column->getAlias() || 'array' === $column->getAlias() ) {
+            return 'LOWER(CAST('.$searchField.' AS text))';
         }
 
         return $searchField;
@@ -557,6 +565,9 @@ class DatatableQuery
                     }
 
                     $orExpr->add($qb->expr()->like($searchField, '?' . $key));
+                    if($column->getAlias() === "datetime"){
+                        $globalSearch = date( "Y-m-d", strtotime(str_replace('/', '-',$globalSearch)));
+                    }
                     $qb->setParameter($key, '%' . $globalSearch . '%');
                 }
             }
@@ -580,8 +591,11 @@ class DatatableQuery
                         if (true === $this->isPostgreSQLConnection) {
                             $searchField = $this->cast($searchField, $column);
                         }
-
+                        if($column->getAlias() === "datetime"){
+                            $searchValue = date( "Y-m-d", strtotime(str_replace('/', '-',$searchValue)));
+                        }
                         $andExpr = $filter->addAndExpression($andExpr, $qb, $searchField, $searchValue, $i);
+
                     }
                 }
             }
@@ -668,7 +682,7 @@ class DatatableQuery
      *
      * @return int
      */
-    private function getCountFilteredResults($rootEntityIdentifier, $buildQuery = true)
+    private function getCountFilteredResults($rootEntityIdentifier, $buildQuery = true, $totalItemsFiltered = null)
     {
         if (true === $buildQuery) {
             $qb = $this->em->createQueryBuilder();
@@ -679,7 +693,11 @@ class DatatableQuery
             $this->setWhere($qb);
             $this->setWhereAllCallback($qb);
 
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            if($totalItemsFiltered == null || $this->requestParams['search']['value'] || count($qb->getParameters())){
+                $totalItemsFiltered = (int) $qb->getQuery()->getSingleScalarResult();
+            }
+
+            return $totalItemsFiltered;
         } else {
             $this
                 ->qb
@@ -731,6 +749,29 @@ class DatatableQuery
         return $query;
     }
 
+    /**
+     * Add Hints into a KNP Query instance.
+     *
+     * @return Query
+     * @throws Exception
+     */
+    private function addTotalCount($totalItems)
+    {
+        $query = $this->execute();
+        if (true === $this->configs['translation_query_hints']) {
+            if (true === $this->doctrineExtensions) {
+                $query->setHint(
+                    'knp_paginator.count',
+                    $totalItems
+                );
+            } else {
+                throw new Exception('execute(): "DoctrineExtensions" does not exist.');
+            }
+        }
+        return $query;
+    }
+
+
     //-------------------------------------------------
     // Response
     //-------------------------------------------------
@@ -743,12 +784,57 @@ class DatatableQuery
      * @return Response
      * @throws Exception
      */
-    public function getResponse($buildQuery = true)
+    public function getResponse($buildQuery = true,$paginateOptions = null)
     {
-        false === $buildQuery ? : $this->buildQuery();
+        false === $buildQuery ?: $this->buildQuery();
 
-        $fresults = new Paginator($this->execute(), true);
-        $fresults->setUseOutputWalkers(false);
+        $customTotalResults = $this->datatableView->getOptions()->getCustomTotalResults();
+
+        $recordsTotal = (int) $this->getCountAllResults($this->rootEntityIdentifier);
+        $recordsFiltered = (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery, $recordsTotal);
+
+        if($customTotalResults){
+            $recordsTotal = $customTotalResults;
+            $recordsFiltered = ($customTotalResults < $recordsFiltered) ? $customTotalResults : $recordsFiltered;
+        }
+
+
+        if ($paginateOptions['use_knp_paginator'] == true) { // Use KNP PAGINATOR AND WRAP QUERY
+                $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
+                $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
+                $fresults = $this->paginator->paginate(
+                    $this->addTotalCount($recordsTotal),
+                    $page,
+                    $this->requestParams['length'],
+                    array(
+                        'distinct' => true,
+                        'wrap-queries' => boolval($useWrapQueries),
+                    )
+                );
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $recordsTotal,
+                'recordsFiltered' => (int) $recordsFiltered
+            );
+
+        }else{ // Don't use KNP PAGNIATOR
+            $fresults = new Paginator($this->execute(), true);
+            $useOutputWalker = false;
+            if ($paginateOptions['use_output_walker']==true)
+                $useOutputWalker = true;
+            
+            $fresults->setUseOutputWalkers($useOutputWalker);
+
+            $outputHeader = array(
+                'draw' => (int) $this->requestParams['draw'],
+                'recordsTotal' => (int) $recordsTotal,
+                'recordsFiltered' => (int) $recordsFiltered
+            );
+
+        }
+
+        //$fresults->setUseOutputWalkers(false);
         $output = array('data' => array());
 
         foreach ($fresults as $item) {
@@ -760,7 +846,6 @@ class DatatableQuery
             foreach ($this->columns as $column) {
                 $column->renderContent($item, $this);
 
-                /** @var ActionColumn $column */
                 if ('action' === $column->getAlias()) {
                     $column->checkVisibility($item);
                 }
@@ -769,14 +854,12 @@ class DatatableQuery
             $output['data'][] = $item;
         }
 
-        $outputHeader = array(
-            'draw' => (int) $this->requestParams['draw'],
-            'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-            'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery)
-        );
+
+
 
         $fullOutput = array_merge($outputHeader, $output);
         $fullOutput = $this->applyResponseCallbacks($fullOutput);
+
 
         $json = $this->serializer->serialize($fullOutput, 'json');
         $response = new Response($json);
@@ -951,5 +1034,9 @@ class DatatableQuery
     public function getImagineBundle()
     {
         return $this->imagineBundle;
+    }
+    
+    public function checkPostgreSQLConnection(){
+        return $this->isPostgreSQLConnection;
     }
 }
