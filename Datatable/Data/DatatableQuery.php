@@ -799,7 +799,7 @@ class DatatableQuery
         }
 
 
-        if ($paginateOptions['use_knp_paginator'] == true) { // Use KNP PAGINATOR AND WRAP QUERY
+        if (array_key_exists('use_knp_paginator',$paginateOptions) && $paginateOptions['use_knp_paginator'] == true) { // Use KNP PAGINATOR AND WRAP QUERY
                 $useWrapQueries = (!empty($this->requestParams['order'][0]) && intval($this->requestParams['order'][0]['column'])!=1)? true:false ;
                 $page = (intval($this->requestParams['start'])/intval($this->requestParams['length']))+1;
                 $fresults = $this->paginator->paginate(
@@ -821,7 +821,7 @@ class DatatableQuery
         }else{ // Don't use KNP PAGNIATOR
             $fresults = new Paginator($this->execute(), true);
             $useOutputWalker = false;
-            if ($paginateOptions['use_output_walker']==true)
+            if (array_key_exists('use_output_walker',$paginateOptions) && $paginateOptions['use_output_walker']==true)
                 $useOutputWalker = true;
             
             $fresults->setUseOutputWalkers($useOutputWalker);
