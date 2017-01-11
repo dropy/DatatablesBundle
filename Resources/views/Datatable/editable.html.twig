@@ -33,7 +33,7 @@
                     {% for key, value in  column.editableData %}
                         {
                         id: {{ key }},
-                        text: {% if value is empty %} '{{ key }}' {% else %}'{{ value }}'{%  endif %}
+                        text: {% if value is empty %} '{{ key }}'{% else %}'{{ value }}'{%  endif %}
                         },
                     {% endfor %}
                     ],
