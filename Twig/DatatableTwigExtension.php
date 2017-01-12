@@ -243,4 +243,6 @@ class DatatableTwigExtension extends Twig_Extension
 
         return $result;
     }
+
+
 }
