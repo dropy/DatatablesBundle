@@ -88,7 +88,13 @@ $(".{{ view_table_id }}_multiselect_action_click").on('click', function(event) {
             addPoductSellerDatatable(oTable,"{{ path('partnerui_get_selected_products_results_ajax') }}","{{ path('partnerui_add_link_products_seller_ajax') }}","{{ view_table_id }}");
             return;
         }
+            if (
+                $(this).attr("href") == "{{ path('partnerui_update_link_products_seller_ajax') }}"
+            ) {
 
+                addPoductSellerDatatable(oTable,"{{ path('partnerui_get_selected_products_results_ajax') }}","{{ path('partnerui_update_link_products_seller_ajax') }}","{{ view_table_id }}");
+                return;
+            }
 
         {% set token = csrf_token('multiselect') %}
         var href = $(this).attr("href");
