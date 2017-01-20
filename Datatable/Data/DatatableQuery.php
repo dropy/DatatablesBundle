@@ -107,6 +107,11 @@ class DatatableQuery
     /**
      * @var array
      */
+    private $joinsFilters;
+
+    /**
+     * @var array
+     */
     private $searchColumns;
 
     /**
@@ -205,6 +210,7 @@ class DatatableQuery
         $this->selectColumns = array();
         $this->virtualColumns = $datatableView->getColumnBuilder()->getVirtualColumns();
         $this->joins = array();
+        $this->joinsFilters = array();
         $this->searchColumns = array();
         $this->orderColumns = array();
         $this->callbacks = array();
@@ -296,7 +302,9 @@ class DatatableQuery
 
         foreach ($this->columns as $key => $column) {
             $data = $column->getDql();
-
+            dump($data);
+            dump(get_class($column));
+            dump($column->getType());
             if (true === $this->isSelectColumn($data)) {
 
                 $parts = explode('.', $data);
@@ -316,6 +324,9 @@ class DatatableQuery
 
                     if (!array_key_exists($previousAlias.'.'.$currentPart, $this->joins)) {
                         $this->joins[$previousAlias.'.'.$currentPart] = $currentAlias;
+                        if($column->getType() == "ArrayColumn"){
+                            $this->joinsFilters[$previousAlias.'.'.$currentPart] = $column->getJoinFilter();
+                        }
                     }
 
                     $metadata = $this->setIdentifierFromAssociation($currentAlias, $currentPart, $metadata);
@@ -533,7 +544,12 @@ class DatatableQuery
     private function setLeftJoins(QueryBuilder $qb)
     {
         foreach ($this->joins as $key => $value) {
-            $qb->leftJoin($key, $value);
+            if(array_key_exists($key,$this->joinsFilters)){
+                dump($this->joinsFilters[$key]);
+                $qb->leftJoin($key, $value,'WITH', $this->joinsFilters[$key] );
+            }
+            else
+                $qb->leftJoin($key, $value);
         }
 
         return $this;

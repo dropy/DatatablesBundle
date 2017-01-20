@@ -21,6 +21,8 @@ use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
  */
 class Column extends AbstractColumn
 {
+
+
     /**
      * Default content.
      *

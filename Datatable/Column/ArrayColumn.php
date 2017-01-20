@@ -37,6 +37,16 @@ class ArrayColumn extends Column
      */
     protected $countAction;
 
+
+    /**
+     * The counter represents a link.
+     *
+     * @var Action
+     */
+    protected $joinFilter;
+
+
+
     //-------------------------------------------------
     // ColumnInterface
     //-------------------------------------------------
@@ -54,8 +64,7 @@ class ArrayColumn extends Column
             throw new InvalidArgumentException('setData(): An association is expected.');
         }
 
-        $this->data = $data;
-
+        $this->data = $data ;
         return $this;
     }
 
@@ -92,10 +101,12 @@ class ArrayColumn extends Column
 
         $resolver->setDefault('count', false);
         $resolver->setDefault('count_action', array());
+        $resolver->setDefault('join_filter', '');
 
         $resolver->addAllowedTypes('data', 'string');
         $resolver->setAllowedTypes('count', 'bool');
         $resolver->addAllowedTypes('count_action', 'array');
+        $resolver->addAllowedTypes('join_filter', 'string');
 
         return $this;
     }
@@ -154,4 +165,28 @@ class ArrayColumn extends Column
     {
         return $this->countAction;
     }
+
+    /**
+     * @return Action
+     */
+    public function getJoinFilter()
+    {
+        return $this->joinFilter;
+    }
+
+
+
+    /**
+     * @param Action $joinFilter
+     */
+    public function setJoinFilter($joinFilter)
+    {
+        $this->joinFilter = $joinFilter;
+    }
+
+
+    public function getType(){
+        return 'ArrayColumn';
+    }
+
 }
