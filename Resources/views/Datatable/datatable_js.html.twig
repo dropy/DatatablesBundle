@@ -84,6 +84,7 @@
                                 oTable.draw();
                             });
                         })
+
                         {% include "SgDatatablesBundle:Datatable:after_events.js.twig" %}
                         {% if view_features.extensions.responsive is defined %}
                             {% if true == view_features.extensions.responsive %}
@@ -149,17 +150,17 @@
                 {% include "SgDatatablesBundle:Action:multiselect_actions.html.twig" with {'column': view_multiselect_column} %}
             {% endif %}
 
-
-            $(selector +" thead td input").unbind();
-            $(selector +"_filter input").unbind();
-            $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup', function(e) {
+            var filterBindFunction = function(e) {
                 oTable
                         .column($(e.currentTarget).data('filter-property-id'))
                         .search(this.value);
                 if(e.keyCode == 13) {
                     oTable.draw();
                 }
-            });
+            };
+            $(selector +" thead td input").unbind();
+            $(selector +"_filter input").unbind();
+            $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
             $(selector +"_filter input").bind('keyup', function(e) {
                 oTable.search(this.value);
                 if(e.keyCode == 13) {
@@ -167,6 +168,12 @@
                             .draw();
                 }
             });
+
+            oTable.on('column-visibility.dt', function() {
+
+                $(selector + "_wrapper").find("tr input.individual_filtering").unbind();
+                $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
+            })
         }, features.delay);
 
 

@@ -577,6 +577,7 @@ class DatatableQuery
 
         // individual filtering
         if (true === $this->individualFiltering) {
+
             $andExpr = $qb->expr()->andX();
 
             $i = 100;
@@ -584,9 +585,11 @@ class DatatableQuery
             foreach ($this->columns as $key => $column) {
 
                 if (true === $this->isSearchColumn($column)) {
+
                     $filter = $column->getFilter();
                     $searchField = $this->searchColumns[$key];
                     $searchValue = $this->requestParams['columns'][$key]['search']['value'];
+
                     if ('' != $searchValue && 'null' != $searchValue) {
                         if (true === $this->isPostgreSQLConnection) {
                             $searchField = $this->cast($searchField, $column);

@@ -6,8 +6,11 @@
         var i = 0, nbHidden = 0;
         while(undefined !== columsObject[i]){
             if(columsObject[i].visible == true){
+
                 var oControl = controls[i-nbHidden];
+
                 if(oControl.children[0]){
+
                     //oControl.children[0].onchange = inputChange;
 
 
