@@ -302,9 +302,7 @@ class DatatableQuery
 
         foreach ($this->columns as $key => $column) {
             $data = $column->getDql();
-            dump($data);
-            dump(get_class($column));
-            dump($column->getType());
+
             if (true === $this->isSelectColumn($data)) {
 
                 $parts = explode('.', $data);
@@ -545,7 +543,7 @@ class DatatableQuery
     {
         foreach ($this->joins as $key => $value) {
             if(array_key_exists($key,$this->joinsFilters)){
-                dump($this->joinsFilters[$key]);
+
                 $qb->leftJoin($key, $value,'WITH', $this->joinsFilters[$key] );
             }
             else
