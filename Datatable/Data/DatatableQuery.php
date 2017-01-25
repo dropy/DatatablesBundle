@@ -810,7 +810,7 @@ class DatatableQuery
         $recordsTotal = (int) $this->getCountAllResults($this->rootEntityIdentifier);
         $recordsFiltered = (int) $this->getCountFilteredResults($this->rootEntityIdentifier, $buildQuery, $recordsTotal);
 
-        if($customTotalResults){
+        if($customTotalResults !== null){
             $recordsTotal = $customTotalResults;
             $recordsFiltered = ($customTotalResults < $recordsFiltered) ? $customTotalResults : $recordsFiltered;
         }

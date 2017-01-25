@@ -466,8 +466,10 @@ class Options extends AbstractViewOptions
      */
     protected function setCustomTotalResults($value)
     {
-        $this->customTotalResults = (integer) $value;
-
+        if($value!==null)
+            $this->customTotalResults = (integer) $value;
+        else
+            $this->customTotalResults = null;
         return $this;
     }
 
@@ -478,7 +480,9 @@ class Options extends AbstractViewOptions
      */
     public function getCustomTotalResults()
     {
-        return (integer) $this->customTotalResults;
+        if($this->customTotalResults!==null)
+            return (integer) $this->customTotalResults;
+        else return null;
     }
 
     /**
