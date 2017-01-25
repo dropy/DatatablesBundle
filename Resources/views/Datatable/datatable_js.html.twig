@@ -173,6 +173,8 @@
 
                 $(selector + "_wrapper").find("tr input.individual_filtering").unbind();
                 $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
+                {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
+
             })
         }, features.delay);
 
