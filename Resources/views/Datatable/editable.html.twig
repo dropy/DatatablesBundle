@@ -59,7 +59,7 @@
                 },
                 container: 'body',
                 {# many-to-one associations and the Responsive-extension need a complete table redraw #}
-                {% if column.isAssociation or view_features.extensions.responsive is defined and true == view_features.extensions.responsive %}
+                {% if column.getEditableForceReload or column.isAssociation or view_features.extensions.responsive is defined and true == view_features.extensions.responsive %}
                 success: function(response, newValue) {
                     oTable.draw('page');
                     {% if column.isAssociation %}

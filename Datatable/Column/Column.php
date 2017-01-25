@@ -68,6 +68,13 @@ class Column extends AbstractColumn
     protected $editable_title;
 
     /**
+     * Editable force reload datatable .
+     *
+     * @var string
+     */
+    protected $editable_force_reload;
+
+    /**
      * Role based editing permission.
      *
      * @var null|string
@@ -137,6 +144,7 @@ class Column extends AbstractColumn
             'editable_type' => '',
             'editable_data' => array(),
             'editable_title' => '',
+            'editable_force_reload' => false,
 
             'editable_role' => null
 
@@ -160,6 +168,7 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('editable_type', 'string');
         $resolver->setAllowedTypes('editable_data','array');
         $resolver->setAllowedTypes('editable_title', 'string');
+        $resolver->setAllowedTypes('editable_force_reload', 'bool');
 
         //$resolver->setAllowedValues('search_type', array('like', 'notLike', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull', 'isNotNull'));
         //$resolver->setAllowedValues('filter_type', array('text', 'select'));
@@ -314,5 +323,22 @@ class Column extends AbstractColumn
     {
         return $this->editableRole;
     }
+
+    /**
+     * @return string
+     */
+    public function getEditableForceReload()
+    {
+        return $this->editable_force_reload;
+    }
+
+    /**
+     * @param string $editable_force_reload
+     */
+    public function setEditableForceReload($editable_force_reload)
+    {
+        $this->editable_force_reload = $editable_force_reload;
+    }
+
 
 }
