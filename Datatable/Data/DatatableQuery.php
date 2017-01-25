@@ -602,7 +602,10 @@ class DatatableQuery
 
                     $filter = $column->getFilter();
                     $searchField = $this->searchColumns[$key];
-                    $searchValue = $this->requestParams['columns'][$key]['search']['value'];
+                    $searchValue = '';
+                    if(array_key_exists($key, $this->requestParams['columns'])){
+                        $searchValue = $this->requestParams['columns'][$key]['search']['value'];
+                    }
 
                     if ('' != $searchValue && 'null' != $searchValue) {
                         if (true === $this->isPostgreSQLConnection) {
