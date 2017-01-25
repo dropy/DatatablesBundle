@@ -158,6 +158,15 @@
                     oTable.draw();
                 }
             };
+
+            oTable.on('column-visibility.dt', function() {
+
+                $(selector + "_wrapper").find("tr input.individual_filtering").unbind();
+                $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
+                {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
+
+            });
+
             $(selector +" thead td input").unbind();
             $(selector +"_filter input").unbind();
             $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
@@ -169,17 +178,9 @@
                 }
             });
 
-            oTable.on('column-visibility.dt', function() {
 
-                $(selector + "_wrapper").find("tr input.individual_filtering").unbind();
-                $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
-                {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
-
-            })
         }, features.delay);
-
-
-
+        
     });
 
 </script>
