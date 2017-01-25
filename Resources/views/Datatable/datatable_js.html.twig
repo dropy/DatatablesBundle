@@ -135,13 +135,21 @@
                 //$(selector + "_wrapper").find("tr input.individual_filtering").on("keyup change", throttledSearch);
 
                 $(selector + "_wrapper" + " select.individual_filtering").on("keyup change", function(event) {
+
                     var searchFieldId = $(event.currentTarget).data('filter-property-id');
                     var searchValue = $(this).val();
                     searchValue = searchValue ? searchValue.toString() : '';
-                    oTable
-                        .column(searchFieldId)
-                        .search(searchValue)
-                        .draw();
+                    if("redraw" in event && event.redraw == false) {
+                        oTable
+                                .column(searchFieldId)
+                                .search(searchValue);
+                    }else{
+                        oTable
+                                .column(searchFieldId)
+                                .search(searchValue)
+                                .draw();
+                    }
+
                 });
 
             {% endif %}
@@ -151,6 +159,7 @@
             {% endif %}
 
             var filterBindFunction = function(e) {
+
                 oTable
                         .column($(e.currentTarget).data('filter-property-id'))
                         .search(this.value);
