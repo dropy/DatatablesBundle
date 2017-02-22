@@ -1,0 +1,196 @@
+{% set selectableColumns = {} %}
+{% for key, column in view_columns %}
+    {% if column.selectableDisplay.isSelectable is defined and column.selectableDisplay.isSelectable is not null and column.selectableDisplay.isSelectable == true %}
+        {% set colkey = 'col_'~key %}
+        {% set selectableColumns = selectableColumns|merge({ (colkey) : column.visible}) %}
+    {% endif %}
+{% endfor %}
+
+var columnSelectable = '{{ selectableColumns|json_encode|raw }}';
+
+function initDataTableDisplay() {
+    var selectableColumnsId = JSON.parse(columnSelectable);
+    var data = JSON.parse( localStorage.getItem( 'DataTables_{{ selector }}') );
+    var columsObject = data.columns;
+    var selectedColumns = [];
+
+    var i = 0;
+    while(undefined !== columsObject[i]){
+        if(columsObject[i].visible == true && undefined !== selectableColumnsId['col_'+i]) {
+            selectedColumns.push(i);
+        }
+        i++;
+    }
+    $('#selectable_{{ view_table_id }}').val(selectedColumns);
+    $('.selectpicker').selectpicker('refresh');
+
+}
+
+$('#selectable_{{ view_table_id }}').change(function () {
+    if(typeof oTable == 'undefined' || typeof oTable.title == 'undefined') {
+        oTable = $("#{{ view_table_id }}").DataTable();
+    }
+    var selectedColumnId = [];
+
+    var optArray = $(this).find("option:selected");
+    for (var key = 0; key < optArray['length']; key++) {
+        selectedColumnId.push(optArray[key]['value']);
+    }
+
+    var allOptionArray = $('#selectable_{{ view_table_id }}').find("option");
+    for (var key = 0; key < allOptionArray['length']; key++) {
+        var columnId  = allOptionArray[key]['value'];
+
+        // Get the column API object
+        var column = oTable.column(columnId) ;
+
+        if (jQuery.inArray(columnId, selectedColumnId) != -1 ) {
+            // Toggle the visibility
+            column.visible(true);
+        }else{
+            // Toggle the visibility
+            column.visible(false);
+        }
+        oTable.state.save();
+
+    }
+});
+
+$('#reset-main-vis').click(function () {
+    localStorage.removeItem('DataTables_{{ selector }}');
+
+    var selectedColumns = [];
+    var selectableColumnsId = JSON.parse(columnSelectable);
+
+    var i = 0;
+    while(undefined !== columsObject[i]){
+        if(selectableColumnsId[i] == true) {
+            selectedColumns.push(i);
+        }
+        i++;
+    }
+    $('#selectable_{{ view_table_id }}').val(selectedColumns);
+    $('.selectpicker').selectpicker('refresh');
+    $('#selectable_{{ view_table_id }}').trigger("change");
+
+
+});
+
+initDataTableDisplay();
+
+//initDataTableDisplay('DataTables_{{ selector }}', columnSelectable, "{{ view_table_id }}");
+
+/*$('#toggle-main-vis').change(function () {
+    if(typeof oTable == 'undefined' || typeof oTable.title == 'undefined') {
+        var dt_wrapper = $(".dataTables_wrapper");
+        var view_table_id = dt_wrapper.attr("id").replace("_wrapper", "");
+        oTable = $("#" + view_table_id).DataTable();
+    }
+    var selectedColumnId = [];
+
+    var optArray = $(this).find("option:selected");
+    for (var key = 0; key < optArray['length']; key++) {
+        selectedColumnId.push(optArray[key]['value']);
+    }
+
+    var allOptionArray = $('#toggle-main-vis').find("option");
+    for (var key = 0; key < allOptionArray['length']; key++) {
+        var columnId  = allOptionArray[key]['value'];
+
+        // Get the column API object
+        var column = oTable.column(columnId) ;
+
+        if (jQuery.inArray(columnId, selectedColumnId) != -1 ) {
+            // Toggle the visibility
+            column.visible(true);
+        }else{
+            // Toggle the visibility
+            column.visible(false);
+        }
+
+    }
+
+});
+
+$('#reset-main-vis').click(function () {
+    if(datatableName == ''){
+        console.log("ERROR : Datatable Name Not Found");
+        alert('Oups ! Impossible de réinitialiser les filtres. Veuillez contacter un administrateur.');
+        return false;
+    }
+
+    /*
+     * local storage must be cleanned for admin when they switch count with differents rights
+     *
+     */
+    /*
+     var datatableStorageJson = localStorage.getItem(datatableName);
+     if(datatableStorageJson === null){
+     console.log("ERROR : Can't find any local data");
+     //alert('Oups ! Impossible de réinitialiser les filtres. Veuillez contacter un administrateur.');
+     return false;
+     }
+     */
+    //localStorage.removeItem(datatableName);
+    /*
+     console.log(datatableStorageJson);
+     var datatableStorage =  JSON.parse(datatableStorageJson);
+     var columnArray = datatableStorage.columns;
+
+     if(columnArray.length <= 0){
+     console.log("ERROR : Can't find any column");
+     alert('Oups ! Impossible de réinitialiser les filtres. Veuillez contacter un administrateur.');
+     return false;
+     }
+
+     for ( var i = 0, len = columnArray.length; i < len; ++i ) {
+     console.log(columnArray[i]);
+     columnArray[i].visible = null;
+     }
+
+     datatableStorage.columns = columnArray;
+     datatableStorageJson = JSON.stringify(datatableStorage);
+     localStorage.setItem(datatableName,datatableStorageJson);
+
+
+    $("#toggle-main-vis").val([]);
+    $('.selectpicker').selectpicker('refresh');
+    $("#toggle-main-vis").trigger("change");
+
+    //alert("HELLO ! IS IT ME YOU'R LOOKING FOR ?");
+});
+
+/**
+ * Init previous column visibility configuration from localStorage
+ * @param datatableName
+ * @returns {boolean}
+
+function initVisibilitySelect(datatableNameParameter){
+
+    datatableName = datatableNameParameter;
+    var datatableStorageJson =  localStorage.getItem(datatableName);
+    if(datatableStorageJson === null)
+        return false;
+
+    var datatableStorage =  JSON.parse(datatableStorageJson);
+    var columnArray = datatableStorage.columns;
+
+    if(columnArray.length <= 0)
+        return false;
+
+    var selectedColumns = [];
+    for ( var i = 0, len = columnArray.length; i < len; ++i ) {
+        if(columnArray[i].visible){
+            if($("#toggle-main-vis option[value='"+i+"']").length > 0){
+                selectedColumns.push(i);
+            }
+        }else{
+
+        }
+
+    }
+    $("#toggle-main-vis").val(selectedColumns);
+    $('.selectpicker').selectpicker('refresh');
+    $("#toggle-main-vis").trigger("change");
+}
+initVisibilitySelect('DataTables_{{ selector }}');*/

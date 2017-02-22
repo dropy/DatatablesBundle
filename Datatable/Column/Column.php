@@ -135,6 +135,7 @@ class Column extends AbstractColumn
             'title' => '',
             'type' => '',
             'visible' => true,
+            'selectableDisplay' => array('isSelectable' => false, 'defaultDisplay' => false),
             'width' => '',
             'filter' => array('text', array()),
             'default' => '',
@@ -156,6 +157,7 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('orderable', 'bool');
         $resolver->setAllowedTypes('render', array('string', 'null'));
         $resolver->setAllowedTypes('searchable', 'bool');
+        $resolver->setAllowedTypes('selectableDisplay', 'array');
         $resolver->setAllowedTypes('title', 'string');
         $resolver->setAllowedTypes('type', 'string');
         $resolver->setAllowedTypes('visible', 'bool');

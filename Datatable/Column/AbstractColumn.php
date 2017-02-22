@@ -119,6 +119,13 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     protected $visible;
 
     /**
+     * Enable or disable the display of this column by using select Dropdown.
+     *
+     * @var array
+     */
+    protected $selectableDisplay;
+
+    /**
      * Column width assignment.
      *
      * @var string
@@ -469,6 +476,30 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     public function getVisible()
     {
         return $this->visible;
+    }
+
+    /**
+     * Set visibility by select.
+     *
+     * @param boolean $selectableDisplay
+     *
+     * @return $this
+     */
+    public function setSelectableDisplay(array $selectableDisplay)
+    {
+        $this->selectableDisplay = $selectableDisplay;
+
+        return $this;
+    }
+
+    /**
+     * Get visibility by select.
+     *
+     * @return array
+     */
+    public function getSelectableDisplay()
+    {
+        return $this->selectableDisplay;
     }
 
     /**

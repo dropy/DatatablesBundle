@@ -75,7 +75,9 @@
                         })
                         .on('init.dt', function() {
                             {% include "SgDatatablesBundle:Datatable:load_filter_params_callback.js.twig" with {'selector': view_table_id} %}
-
+                            {% if view_options.selectableVisibility %}
+                                {% include "SgDatatablesBundle:Datatable:visibility_column_handler.js.twig" with {'selector': view_table_id, 'columns': view_columns} %}
+                            {%  endif  %}
                             $("div.dropyToolbar").html('<a id="filterRefresh" href="" class= "btn red btn-md" ><i  class="fa fa-refresh"></i> Filtres<a>');
 
 

@@ -1,3 +1,7 @@
+{% if view_options.selectableVisibility %}
+    {% include 'SgDatatablesBundle:Action:hide_by_select.html.twig' %}
+{% endif %}
+
 {% set link %}
     <a href="{{action.route }}"
         {% for key, value in action.attributes %}

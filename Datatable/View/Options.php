@@ -172,6 +172,13 @@ class Options extends AbstractViewOptions
      */
     protected $fixMultiselect;
 
+    /**
+     * Use select for column visibility
+     *
+     * @var boolean
+     */
+    protected $selectableVisibility;
+
     //-------------------------------------------------
     // OptionsInterface
     //-------------------------------------------------
@@ -220,13 +227,15 @@ class Options extends AbstractViewOptions
             'individual_filtering' => false,
             'individual_filtering_position' => 'head',
             'use_integration_options' => false,
-            'force_dom' => false
+            'force_dom' => false,
+            'selectableVisibility' => false
         ));
 
         $resolver->setAllowedTypes('display_start', 'int');
         $resolver->setAllowedTypes('defer_loading', 'int');
         $resolver->setAllowedTypes('dom', 'string');
         $resolver->setAllowedTypes('fix_multiselect', 'bool');
+        $resolver->setAllowedTypes('selectableVisibility', 'bool');
         $resolver->setAllowedTypes('length_menu', 'array');
         $resolver->setAllowedTypes('order_classes', 'bool');
         $resolver->setAllowedTypes('order', 'array');
@@ -772,4 +781,25 @@ class Options extends AbstractViewOptions
     {
         return $this->fixMultiselect;
     }
+
+    /**
+    * Set visibility By Select
+    *
+    * @return this
+    */
+    public function setSelectableVisibility($selectableVisibility){
+        $this->selectableVisibility = $selectableVisibility;
+
+        return $this;
+    }
+
+    /**
+     * Set visibility By Select
+     *
+     * @return boolean
+     */
+    public function getSelectableVisibility(){
+        return $this->selectableVisibility;
+    }
+
 }
