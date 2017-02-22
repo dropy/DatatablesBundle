@@ -1,4 +1,7 @@
 {{ view_actions.startHtml|raw }}
+{% if view_options.selectableVisibility %}
+    {% include 'SgDatatablesBundle:Action:hide_by_select.html.twig' %}
+{% endif %}
 {% for action in view_actions.actions %}
     {% include 'SgDatatablesBundle:Action:top_actions.html.twig' %}
 {% endfor %}
