@@ -6,10 +6,11 @@ $(document).ready(function () {
         var tr = e.target.closest('tr');
         var url = tr.querySelector('.details-control i').getAttribute('data-content_route');
 
-        hideOpenedDetailRow();
         if(tr.classList.contains('opened')){
+            hideOpenedDetailRow();
             return;
         }
+        hideOpenedDetailRow();
 
         var detailIcon = tr.querySelector('.details-control i');
         detailIcon.classList.remove('glyphicon-plus-sign');
