@@ -27,7 +27,7 @@ $(document).ready(function () {
                     var html = parseDeclinationObject(d);
                     tr.classList.add('shown');
                     tr.classList.add('opened');
-                    $( '<tr class="child-row"><td></td><td colspan="100%">'+html+'</td></tr>' ).insertAfter(tr);
+                    $( '<tr class="child-row"><td></td><td colspan="'+(tr.children.length-2)+'">'+html+'</td><td></td></tr>' ).insertAfter(tr);
                 }
             });
         }
