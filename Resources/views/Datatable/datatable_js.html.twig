@@ -99,6 +99,32 @@
                         {% endif %}
             }
 
+            var filterBindFunction = function(e) {
+
+                oTable
+                        .column($(e.currentTarget).data('filter-property-id'))
+                        .search(this.value);
+                if(e.keyCode == 13) {
+                    oTable.draw();
+                }
+            };
+
+            var filterSelectBindFunction = function(e) {
+                var searchFieldId = $(e.currentTarget).data('filter-property-id');
+                var searchValue = $(this).val();
+                searchValue = searchValue ? searchValue.toString() : '';
+                if("redraw" in e && e.redraw == false) {
+                    oTable
+                            .column(searchFieldId)
+                            .search(searchValue);
+                }else{
+                    oTable
+                            .column(searchFieldId)
+                            .search(searchValue)
+                            .draw();
+                }
+            };
+
             {% if view_options.individualFiltering %}
 
                 {% if "head" == view_options.individualFilteringPosition %}
@@ -136,23 +162,7 @@
 
                 //$(selector + "_wrapper").find("tr input.individual_filtering").on("keyup change", throttledSearch);
 
-                $(selector + "_wrapper" + " select.individual_filtering").on("keyup change", function(event) {
-
-                    var searchFieldId = $(event.currentTarget).data('filter-property-id');
-                    var searchValue = $(this).val();
-                    searchValue = searchValue ? searchValue.toString() : '';
-                    if("redraw" in event && event.redraw == false) {
-                        oTable
-                                .column(searchFieldId)
-                                .search(searchValue);
-                    }else{
-                        oTable
-                                .column(searchFieldId)
-                                .search(searchValue)
-                                .draw();
-                    }
-
-                });
+                $(selector + "_wrapper" + " select.individual_filtering").on("keyup change", filterSelectBindFunction);
 
             {% endif %}
 
@@ -160,20 +170,11 @@
                 {% include "SgDatatablesBundle:Action:multiselect_actions.html.twig" with {'column': view_multiselect_column} %}
             {% endif %}
 
-            var filterBindFunction = function(e) {
-
-                oTable
-                        .column($(e.currentTarget).data('filter-property-id'))
-                        .search(this.value);
-                if(e.keyCode == 13) {
-                    oTable.draw();
-                }
-            };
-
             oTable.on('column-visibility.dt', function() {
-
+                $(selector + "_wrapper").find("tr select.individual_filtering").unbind();
                 $(selector + "_wrapper").find("tr input.individual_filtering").unbind();
                 $(selector + "_wrapper").find("tr input.individual_filtering").bind('keyup',filterBindFunction);
+                $(selector + "_wrapper").find("tr select.individual_filtering").bind('keyup change',filterSelectBindFunction);
                 {% include "SgDatatablesBundle:Datatable:editable.html.twig" %}
 
             });
