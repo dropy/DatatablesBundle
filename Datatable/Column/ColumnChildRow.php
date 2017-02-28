@@ -11,9 +11,6 @@
 
 namespace Sg\DatatablesBundle\Datatable\Column;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
-
 /**
  * Class Column
  *
@@ -21,9 +18,15 @@ use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
  */
 
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
+use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
+use Sg\DatatablesBundle\Datatable\Data\DatatableQuery;
+
 class ColumnChildRow extends AbstractColumn
 {
     protected $ajax;
+
     public function configureOptions(OptionsResolver $resolver){
         $resolver->setDefaults(array(
             'class' => 'details-control',
@@ -52,7 +55,7 @@ class ColumnChildRow extends AbstractColumn
      */
     public function getTemplate()
     {
-        return 'SgDatatablesBundle:Column:columnChildRow.html.twig';
+        return 'SgDatatablesBundle:Column:childRowColumn.html.twig';
     }
     /**
      * @inheritDoc
@@ -61,10 +64,12 @@ class ColumnChildRow extends AbstractColumn
     {
         return 'childRowColumn';
     }
+
     public function setAjax(array $arr){
         $this->ajax = $arr;
         return $this;
     }
+
     public function getAjax(){
         return $this->ajax;
     }

@@ -2,47 +2,62 @@ $(document).ready(function () {
 
     var detailRows = [];
 
-    var dt = $('tbody').on('click', 'td.details-control', function(event){
-        event.preventDefault();
-        event.stopPropagation();
+    $('tbody').click('td.details-control', function(e){
+        var tr = e.target.closest('tr');
+        var url = tr.querySelector('.details-control i').getAttribute('data-content_route');
 
-        var tr = $(this).closest('tr');
-        var url = $('i', $(this)).data('content_route');
-        var ptable = $(this).closest('table').DataTable();
-        var row = ptable.row(tr);
+        hideOpenedDetailRow();
+        if(tr.classList.contains('opened')){
+            return;
+        }
 
-        var rid =  row.id();
-        console.log(rid);
-        var idx = $.inArray( rid , detailRows );
-        console.log(idx);
+        var detailIcon = tr.querySelector('.details-control i');
+        detailIcon.classList.remove('glyphicon-plus-sign');
+        detailIcon.classList.add('glyphicon-minus-sign');
 
-        if(row.child.isShown()){
-            tr.removeClass('details');
-            row.child.hide();
-            detailRows.splice( idx, 1 );
-        } else {
-            tr.addClass('details');
+        if(tr.classList.contains('shown')){
+            tr.classList.add('opened');
+            tr.nextSibling.style['display'] = 'table-row';
+        }else{
             $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(d){ //this is specific to my application since I'm adding a child table.
-                    row.child(d.html).show();
-                    $('#' + d.json.id).DataTable();
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(d){ //this is specific to my application since I'm adding a child table.
+                    var html = parseDeclinationObject(d);
+                    tr.classList.add('shown');
+                    tr.classList.add('opened');
+                    $( '<tr class="child-row"><td></td><td colspan="100%">'+html+'</td></tr>' ).insertAfter(tr);
                 }
             });
-            // Add to the 'open' array
-            if ( idx === -1 ) {
-                detailRows.push( rid );
-            }
-            console.log(detailRows);
         }
-    return ptable;
-});
 
-    dt.on('draw', function(){
-        $.each(detailRows, function(i,id){
-            $('#' + id+ ' td.details-control').trigger('click');
-        });
+
     });
+
+    function hideOpenedDetailRow(){
+        var detailOpened = document.querySelectorAll("tr[role='row'].opened");
+        for(var i=0; i < detailOpened.length; i++){
+            detailOpened[i].classList.remove('opened');
+            detailOpened[i].nextSibling.style['display'] = 'none';
+            //detailOpened[i].parentNode.removeChild(detailOpened[i].nextSibling);
+            detailOpened[i].querySelector('.details-control i').classList.remove('glyphicon-minus-sign');
+            detailOpened[i].querySelector('.details-control i').classList.add('glyphicon-plus-sign');
+        }
+    }
+
+    function parseDeclinationObject(pDeclinations){
+        if(pDeclinations.length > 0){
+            var html = '<table class="table table-striped table-bordered table-hover"><tr><th>Id</th><th>Titre</th><th>SKU</th><th>Attributs</th></tr>';
+            for(var i=0; i < pDeclinations.length; i++){
+                declination = pDeclinations[i];
+                html+='<tr><td>'+declination.id+'</td><td>'+declination.name+'</td><td>'+declination.sku+'</td><td>empty</td></tr>';
+
+            }
+            html+='</table>';
+            return html;
+        }else{
+            return '<p>Aucune déclinaison pour ce parent</p>'
+        }
+    }
 });
