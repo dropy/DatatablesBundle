@@ -15,13 +15,21 @@
         routeArgs[arg] = row[col];
         });
     {% endif %}
-
+    {% if column.displayColumnData %}
         if(row.isConfigurable == "Produit Simple"){
             return '<span>'+data+'</span>';
         }
         else{
             return '<span>'+data+'</span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
         }
+    {% else %}
+        if(row.isConfigurable == "Produit Simple"){
+        return '<span></span>';
+        }
+        else{
+        return '<span></span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
+        }
+    {% endif %}
     }
 {%- endif -%}
 },

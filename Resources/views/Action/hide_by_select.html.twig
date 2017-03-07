@@ -1,4 +1,4 @@
-<select id='selectable_{{ view_table_id }}' class='selectpicker toggle-main-vis' multiple data-selected-text-format='count > 0'>
+<select id='selectable_{{ view_table_id }}' class='selectpicker toggle-main-vis column-visibility' multiple data-selected-text-format='count > 0'>
     {% for key, column in view_columns %}
         {% if column.selectableDisplay.isSelectable is defined and column.selectableDisplay.isSelectable == true %}
             <option value="{{key}}" {% if column.visible == true %}selected{% endif %}>{{ column.title|raw }}</option>

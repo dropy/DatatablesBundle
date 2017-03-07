@@ -27,10 +27,13 @@ class ColumnChildRow extends AbstractColumn
 {
     protected $ajax;
 
+    protected $displayColumnData;
+
     public function configureOptions(OptionsResolver $resolver){
         $resolver->setDefaults(array(
             'class' => 'details-control',
             'title' => '',
+            'displayColumnData' => true,
             'ajax' => array('route'=>'', 'args'=>array())
         ));
         $resolver->setAllowedTypes('ajax',array('array','null'));
@@ -72,5 +75,13 @@ class ColumnChildRow extends AbstractColumn
 
     public function getAjax(){
         return $this->ajax;
+    }
+
+    public function setDisplayColumnData($display){
+        $this->displayColumnData = $display;
+    }
+
+    public function getDisplayColumnData(){
+        return $this->displayColumnData;
     }
 }
