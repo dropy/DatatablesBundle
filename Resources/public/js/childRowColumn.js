@@ -9,7 +9,6 @@ $(document).ready(function () {
 
     function handledetailsChildRow() {
         $('td.details-control').on('click', function (e) {
-            console.log("la");
             var tr = e.target.closest('tr');
             var url = tr.querySelector('.details-control i').getAttribute('data-content_route');
 
