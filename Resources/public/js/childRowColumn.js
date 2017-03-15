@@ -34,7 +34,7 @@ $(document).ready(function () {
                         //Générer un callback JS ou récupération direct en template
                         tr.classList.add('shown');
                         tr.classList.add('opened');
-                        $('<tr class="' + tr.classList[0] + ' child-row"><td></td><td colspan="' + (tr.children.length - 2) + '">' + d.html + '</td><td></td></tr>').insertAfter(tr);
+                        $('<tr class="' + tr.classList[0] + ' child-row"><td></td><td colspan="' + (tr.children.length - 1) + '">' + d.html + '</td></tr>').insertAfter(tr);
                     }
                 });
             }

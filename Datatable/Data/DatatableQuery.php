@@ -11,10 +11,11 @@
 
 namespace Sg\DatatablesBundle\Datatable\Data;
 
+use Dropy\CatalogBundle\DropyCatalogBundle;
 use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
-
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
@@ -563,7 +564,10 @@ class DatatableQuery
      */
     private function setWhere(QueryBuilder $qb)
     {
-        $globalSearch = $this->requestParams['search']['value'];
+        if(array_key_exists('search', $this->requestParams))
+            $globalSearch = $this->requestParams['search']['value'];
+        else
+            $globalSearch = '';
 
         // global filtering
         if ('' != $globalSearch) {
@@ -894,7 +898,7 @@ class DatatableQuery
      * @return array
      * @throws Exception
      */
-    public function getDataForExport()
+    public function getDataForExport($result = 'array')
     {
         $this->setSelectFrom();
         $this->setLeftJoins($this->qb);
@@ -902,8 +906,12 @@ class DatatableQuery
         $this->setWhereAllCallback($this->qb);
         $this->setOrderBy();
 
-        return $this->execute()->getArrayResult();
+        if($result == 'array')
+            return $this->execute()->getArrayResult();
+        if($result == 'object')
+            return $this->execute()->getResult();
     }
+
 
     //-------------------------------------------------
     // Helper
