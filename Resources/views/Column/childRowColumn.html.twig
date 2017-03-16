@@ -20,14 +20,20 @@
             return '<span>'+data+'</span>';
         }
         else{
-            return '<span>'+data+'</span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
+            if( ( ("configurableParent" in row) && row.configurableParent == null ) || (("confparentid" in row) && row.confparentid == null ) ){
+                return '<span>'+data+'</span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
+            }
+            return '<span>'+data+'</span>';
         }
     {% else %}
         if(row.isConfigurable == "Produit Simple"){
-        return '<span></span>';
+            return '<span></span>';
         }
         else{
-        return '<span></span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
+            if( ( ("configurableParent" in row) && row.configurableParent == null ) || (("confparentid" in row) && row.confparentid == null ) ){
+                return '<span></span><i class="glyphicon glyphicon-plus-sign" data-content_route="' + Routing.generate('{{ column.ajax.route }}', routeArgs ) + '"></i>';
+            }
+            return '<span></span>';
         }
     {% endif %}
     }
